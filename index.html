@@ -23,8 +23,8 @@
         .step { display: none; animation: fadeIn 0.4s ease; background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: #1e3c72; margin-bottom: 15px; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center;}
         
-        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
-        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #2a5298; border-radius: 50%; animation: spin 1s linear infinite; }
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { width: 50px; height: 50px; border-radius: 50%; background: conic-gradient(#0000 10%, #2a5298); -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 6px), #000 0); animation: spin 1s infinite linear; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -98,18 +98,24 @@
     </style>
 </head>
 <body>
-    <div id="loader-overlay" class="loader-overlay"><div class="spinner"></div><p id="loader-text">กำลังโหลดตลาดนัด...</p></div>
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="spinner"></div>
+        <p id="loader-text" style="margin-top: 15px; color: #1e3c72; font-weight: bold;">กำลังเข้าสู่ตลาด...</p>
+    </div>
     
     <div class="header">
         <span onclick="goHome()" style="cursor:pointer;">🛒 8 Rai Market</span>
-        <!-- ⭐️ เปลี่ยนปุ่มเป็น Profile Icon สำหรับสลับโหมด / ก๊อป UID -->
-        <div id="user-role-badge" onclick="showProfile()" style="font-size: 0.7em; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; cursor: pointer;">👤 โปรไฟล์</div>
+        <div id="user-role-badge" onclick="showProfile()" style="font-size: 0.7em; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; cursor: pointer;">👤</div>
     </div>
 
     <div class="container" id="main-container">
         
         <!-- STEP 1: Home Categories -->
         <div class="step" id="step-home">
+            <div id="staff-dashboard-btn" style="display:none; margin-bottom: 15px;">
+                <button class="btn btn-warning" style="width: 100%; padding: 12px; color: #fff;" onclick="enterDashboard()">🛠️ จัดการระบบ</button>
+            </div>
+            
             <div style="position: relative; margin-bottom: 15px;">
                 <input type="text" id="search-input" placeholder="🔍 ค้นหาร้านค้า, ก๋วยเตี๋ยว, ชานม..." oninput="searchMenu()" style="padding-right: 35px;">
                 <span id="clear-search-btn" onclick="clearSearch()" style="position: absolute; right: 15px; top: 18px; color: #aaa; cursor: pointer; display: none; font-weight: bold;">❌</span>
@@ -211,7 +217,7 @@
                 <img id="qr-img" src="" style="width: 200px; height: 200px; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                 <div style="margin-top: 15px;">
                     <label style="color: #d32f2f; font-weight: bold; display: block; margin-bottom: 5px;">👇 แนบสลิปโอนเงิน *</label>
-                    <input type="file" id="slip-file" accept="image/*" onchange="previewSlip(this)" style="background: white;">
+                    <input type="file" id="slip-file" accept="image/*" onchange="previewSlip(this)" style="background: white; padding: 8px; border-radius: 8px; border: 1px solid #ddd; width: 100%;">
                     <img id="slip-preview" style="display: none; max-width: 100%; height: 150px; object-fit: contain; margin: 10px auto; border-radius: 8px;">
                 </div>
             </div>
@@ -239,9 +245,8 @@
             <h2>👑 ระบบผู้ดูแลส่วนกลาง</h2>
             
             <div style="background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                <h3 style="font-size: 1.1em; color: #1e3c72; margin-bottom: 5px;">➕ สร้างร้านค้าใหม่</h3>
+                <h3 style="font-size: 1.1em; color: #1e3c72; margin-bottom: 5px;">🏪 สร้างร้านค้าใหม่</h3>
                 <p style="font-size: 0.8em; color: #666; margin-bottom: 15px;">ผูกสิทธิ์ให้ลูกค้าเป็นเจ้าของร้านทันที</p>
-                
                 <input type="text" id="new-shop-name" placeholder="ชื่อร้านค้า *" required>
                 <select id="new-shop-cat">
                     <option value="">-- เลือกหมวดหมู่ --</option>
@@ -253,7 +258,16 @@
                     <option value="อื่นๆ">อื่นๆ</option>
                 </select>
                 <input type="text" id="new-shop-uid" placeholder="UID ไลน์ของเจ้าของร้าน *" required>
-                <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="createNewShop()">บันทึกเปิดร้าน</button>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="createNewShop()">บันทึกเปิดร้าน</button>
+            </div>
+
+            <!-- ส่วนเพิ่มไรเดอร์ -->
+            <div style="background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <h3 style="font-size: 1.1em; color: #28a745; margin-bottom: 5px;">🛵 สร้างไรเดอร์ใหม่</h3>
+                <p style="font-size: 0.8em; color: #666; margin-bottom: 15px;">ผูกสิทธิ์ให้ผู้ใช้เป็นพนักงานจัดส่ง</p>
+                <input type="text" id="new-rider-name" placeholder="ชื่อไรเดอร์ (เช่น วินพี่ตูน) *" required>
+                <input type="text" id="new-rider-uid" placeholder="UID ไลน์ของไรเดอร์ *" required>
+                <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="createNewRider()">บันทึกไรเดอร์</button>
             </div>
         </div>
 
@@ -335,8 +349,8 @@
         <span class="cart-count" id="cart-badge">0</span>
     </div>
 
-    <!-- Hidden Input for Shop Profile Image -->
-    <input type="file" id="shop-cover-upload" accept="image/*" style="display:none;" onchange="handleShopCoverChange(this)">
+    <!-- Hidden Input for Shop Profile & Menu Image -->
+    <input type="file" id="shop-cover-upload" accept="image/*" style="display:none;" onchange="handleImageChange(this)">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
@@ -345,12 +359,30 @@
 
         let state = {
             uid: "", name: "", role: "CUSTOMER", shopId: null, isOnline: false,
-            currentMode: "CUSTOMER", // ⭐️ โหมดจำลองเพื่อสลับหน้าจอ
+            currentMode: "CUSTOMER", 
             shops: [], menus: [], cart: [], cartShopId: null,
             map: null, marker: null, shopLocation: [13.8825208, 100.4553696], 
             slipBase64: null, adminInterval: null, riderInterval: null,
-            tempCoverBase64: null 
+            tempImageBase64: null 
         };
+
+        // ⭐️ ฟังก์ชันย่อขนาดรูปภาพ (ใช้ร่วมกันได้ทุกส่วน)
+        function resizeImage(file, callback, maxWidth) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                    let w = img.width; let h = img.height; 
+                    if(w > h) { if(w > maxWidth) { h *= maxWidth/w; w = maxWidth; } } 
+                    else { if(h > maxWidth) { w *= maxWidth/h; h = maxWidth; } }
+                    canvas.width = w; canvas.height = h; ctx.drawImage(img, 0, 0, w, h);
+                    callback(canvas.toDataURL('image/jpeg', 0.8));
+                }; 
+                img.src = e.target.result;
+            }; 
+            reader.readAsDataURL(file);
+        }
 
         // ==========================================
         // 🟢 INIT & SYSTEM
@@ -377,7 +409,7 @@
             } catch(e) { hideLoader(); Swal.fire('Error', 'เชื่อมต่อเซิร์ฟเวอร์ล้มเหลว', 'error'); throw e; }
         }
 
-        function showLoader(msg) { document.getElementById('loader-text').innerText = msg || 'กำลังโหลด...'; document.getElementById('loader-overlay').style.display = 'flex'; }
+        function showLoader(msg) { document.getElementById('loader-text').innerText = msg || 'กำลังเข้าสู่ตลาด...'; document.getElementById('loader-overlay').style.display = 'flex'; }
         function hideLoader() { document.getElementById('loader-overlay').style.display = 'none'; }
         
         function showStep(stepId) { 
@@ -406,10 +438,8 @@
         
         function showCustomerStatus() { fetchCustomerOrders(); }
 
-        // ⭐️ ระบบ Profile & สลับโหมด
         function showProfile() {
             let modeBtn = '';
-            // ถ้าเป็นแอดมิน, ร้านค้า หรือ ไรเดอร์ ให้มีปุ่มสลับโหมด
             if (state.role === 'SHOP' || state.role === 'RIDER' || state.role === 'ADMIN') {
                 if (state.currentMode === 'CUSTOMER') {
                     modeBtn = `<button class="btn btn-warning" style="width:100%; margin-top:10px; color:white;" onclick="switchMode('${state.role}'); Swal.close();">⚙️ สลับไปโหมดจัดการ (หลังบ้าน)</button>`;
@@ -423,7 +453,7 @@
                 html: `
                     <div style="text-align:left; font-size: 14px; color: #555;">
                         <p style="margin-bottom:5px;"><b>ชื่อ:</b> ${state.name || 'ไม่ได้ล็อกอิน'}</p>
-                        <p style="margin-bottom:5px;"><b>สิทธิ์ปัจจุบัน:</b> ${state.role}</p>
+                        <p style="margin-bottom:5px;"><b>สิทธิ์ผู้ใช้:</b> ${state.role}</p>
                         <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin-top: 15px; border: 1px dashed #ccc;">
                             <p style="margin: 0 0 5px 0; font-size: 12px; color: #888;">รหัสประจำตัว (UID):</p>
                             <p style="margin: 0 0 10px 0; word-break: break-all; font-family: monospace; color: #1e3c72; font-weight: bold;">${state.uid || 'ไม่พบข้อมูล'}</p>
@@ -439,40 +469,36 @@
 
         function copyUID() {
             const el = document.createElement('textarea');
-            el.value = state.uid;
-            document.body.appendChild(el);
-            el.select(); document.execCommand('copy'); document.body.removeChild(el);
+            el.value = state.uid; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
             Swal.fire({toast:true, position:'top', icon:'success', title:'คัดลอก UID แล้ว!', showConfirmButton:false, timer:1500});
         }
 
         function switchMode(mode) {
             state.currentMode = mode;
-            if (mode === 'CUSTOMER') { goHome(); } 
-            else { enterDashboard(); }
+            if (mode === 'CUSTOMER') goHome(); else enterDashboard();
             updateHeaderBadge();
         }
 
         function updateHeaderBadge() {
             const badge = document.getElementById('user-role-badge');
             if (state.currentMode === 'CUSTOMER') {
-                badge.innerHTML = '👤 ลูกค้า'; badge.style.background = 'rgba(255,255,255,0.2)';
+                badge.innerHTML = '👤'; badge.style.background = 'rgba(255,255,255,0.2)';
             } else if (state.currentMode === 'SHOP') {
                 badge.innerHTML = '🏪 ร้านค้า'; badge.style.background = '#dc3545';
             } else if (state.currentMode === 'RIDER') {
                 badge.innerHTML = '🛵 ไรเดอร์'; badge.style.background = '#28a745';
             } else if (state.currentMode === 'ADMIN') {
-                badge.innerHTML = '👑 แอดมิน'; badge.style.background = '#ff9800';
+                badge.innerHTML = '👑 Admin'; badge.style.background = '#ff9800';
             }
         }
 
         // ==========================================
-        // 🛒 DRAG CART LOGIC 
+        // 🛒 DRAG CART
         // ==========================================
         let isDragging = false; let hasDragged = false;
         function initDragCart() {
             const cartBtn = document.getElementById('float-cart');
             let startX, startY, initialLeft, initialTop;
-            
             function onDown(e) {
                 isDragging = true; hasDragged = false;
                 let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
@@ -489,15 +515,13 @@
                 let dx = clientX - startX; let dy = clientY - startY;
                 if (Math.abs(dx) > 5 || Math.abs(dy) > 5) hasDragged = true;
                 if (hasDragged) {
-                    e.preventDefault();
-                    let newLeft = initialLeft + dx; let newTop = initialTop + dy;
+                    e.preventDefault(); let newLeft = initialLeft + dx; let newTop = initialTop + dy;
                     newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - cartBtn.offsetWidth));
                     newTop = Math.max(0, Math.min(newTop, window.innerHeight - cartBtn.offsetHeight));
                     cartBtn.style.left = newLeft + 'px'; cartBtn.style.top = newTop + 'px';
                 }
             }
             function onUp(e) { isDragging = false; }
-            
             cartBtn.addEventListener('mousedown', onDown); document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp);
             cartBtn.addEventListener('touchstart', onDown, {passive: false}); document.addEventListener('touchmove', onMove, {passive: false}); document.addEventListener('touchend', onUp);
         }
@@ -512,22 +536,15 @@
         // 🛍️ MARKET DATA & RENDER
         // ==========================================
         async function loadMarketData() {
-            showLoader('เปิดตลาด...');
+            showLoader('กำลังเข้าสู่ตลาด...');
             const data = await api({ action: 'getMarketData' });
             if(data && !data.error) {
                 state.shops = data.shops; state.menus = data.menus;
                 state.role = data.user.role; state.shopId = data.user.shopId; state.isOnline = data.user.isOnline;
                 
-                // ตรวจสอบ Role เพื่อกำหนดโหมดเริ่มต้น
                 if(state.role === 'SHOP' || state.role === 'RIDER' || state.role === 'ADMIN') {
-                    state.currentMode = state.role;
-                    updateHeaderBadge();
-                    enterDashboard();
-                } else {
-                    state.currentMode = 'CUSTOMER';
-                    updateHeaderBadge();
-                    goHome();
-                }
+                    state.currentMode = state.role; updateHeaderBadge(); enterDashboard();
+                } else { state.currentMode = 'CUSTOMER'; updateHeaderBadge(); goHome(); }
                 
                 try { 
                     const savedCart = localStorage.getItem('8rai_cart'); const savedShop = localStorage.getItem('8rai_cart_shop');
@@ -545,48 +562,49 @@
             else goHome();
         }
 
-        // ⭐️ โค้ดสร้างร้านค้า (Super Admin)
+        // 👑 โค้ดสร้างร้านค้า (Super Admin)
         async function createNewShop() {
             const name = document.getElementById('new-shop-name').value.trim();
             const cat = document.getElementById('new-shop-cat').value;
             const uid = document.getElementById('new-shop-uid').value.trim();
-            
             if(!name || !cat || !uid) return Swal.fire('ข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'warning');
-            
             showLoader('กำลังสร้างร้านค้า...');
             const res = await api({ action: 'createShop', shopName: name, category: cat, ownerUid: uid });
             hideLoader();
-            
+            if(res.success) { Swal.fire('สำเร็จ', 'สร้างร้านค้าและผูกสิทธิ์เรียบร้อยแล้ว!', 'success').then(() => { window.location.reload(); }); } 
+            else { Swal.fire('ผิดพลาด', res.error || 'สร้างร้านค้าไม่สำเร็จ', 'error'); }
+        }
+
+        // 👑 โค้ดสร้างไรเดอร์ (Super Admin)
+        async function createNewRider() {
+            const name = document.getElementById('new-rider-name').value.trim();
+            const uid = document.getElementById('new-rider-uid').value.trim();
+            if(!name || !uid) return Swal.fire('ข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'warning');
+            showLoader('กำลังบันทึก...');
+            const res = await api({ action: 'createRider', riderName: name, riderUid: uid });
+            hideLoader();
             if(res.success) {
-                Swal.fire('สำเร็จ', 'สร้างร้านค้าและผูกสิทธิ์เรียบร้อยแล้ว!', 'success').then(() => {
-                    document.getElementById('new-shop-name').value = '';
-                    document.getElementById('new-shop-cat').value = '';
-                    document.getElementById('new-shop-uid').value = '';
-                    window.location.reload(); 
+                Swal.fire('สำเร็จ', 'ผูกสิทธิ์ไรเดอร์เรียบร้อยแล้ว!', 'success').then(() => {
+                    document.getElementById('new-rider-name').value = ''; document.getElementById('new-rider-uid').value = '';
                 });
-            } else { Swal.fire('ผิดพลาด', res.error || 'สร้างร้านค้าไม่สำเร็จ', 'error'); }
+            } else { Swal.fire('ผิดพลาด', res.error || 'สร้างไม่สำเร็จ', 'error'); }
         }
 
         function renderCategories() {
-            const cats = [...new Set(state.shops.map(s => s.category).filter(c => c))];
-            let html = '';
+            const cats = [...new Set(state.shops.map(s => s.category).filter(c => c))]; let html = '';
             cats.forEach(c => {
                 const count = state.shops.filter(s => s.category === c && s.isOpen).length;
                 let icon = '🍔'; if(c.includes('ชานม') || c.includes('กาแฟ') || c.includes('น้ำ')) icon = '🧋'; if(c.includes('ก๋วยเตี๋ยว')) icon = '🍜';
                 html += `<div class="category-card" onclick="filterShops('${c}')"><span class="category-icon">${icon}</span><h3>${c}</h3><p style="font-size:11px; color:#888; margin-top:5px;">${count} ร้านเปิดอยู่</p></div>`;
             });
-            document.getElementById('cat-grid').innerHTML = html;
-            renderShops(state.shops);
+            document.getElementById('cat-grid').innerHTML = html; renderShops(state.shops);
         }
 
         function filterShops(cat) { renderShops(state.shops.filter(s => s.category === cat)); document.getElementById('shop-grid').scrollIntoView({behavior: 'smooth'}); }
         function searchMenu() {
-            const q = document.getElementById('search-input').value.toLowerCase();
-            const btn = document.getElementById('clear-search-btn');
+            const q = document.getElementById('search-input').value.toLowerCase(); const btn = document.getElementById('clear-search-btn');
             if(!q) { btn.style.display = 'none'; renderShops(state.shops); return; }
-            btn.style.display = 'block';
-            const filteredShops = state.shops.filter(s => s.shopName.toLowerCase().includes(q) || s.category.toLowerCase().includes(q));
-            renderShops(filteredShops);
+            btn.style.display = 'block'; const filteredShops = state.shops.filter(s => s.shopName.toLowerCase().includes(q) || s.category.toLowerCase().includes(q)); renderShops(filteredShops);
         }
         function clearSearch() { document.getElementById('search-input').value = ''; searchMenu(); }
 
@@ -626,22 +644,21 @@
             let html = '';
             shopMenus.forEach(m => {
                 const img = m.imageUrl || 'https://via.placeholder.com/150';
-                let btn = m.isAvailable ? `<button class="btn btn-outline btn-sm" onclick="promptOptions('${m.menuId}', '${shopId}')">+ เพิ่ม (${m.price}฿)</button>` : `<span style="color:#dc3545; font-size:0.8em; font-weight:bold;">หมดชั่วคราว</span>`;
+                let btn = m.isAvailable ? `<button class="btn btn-outline btn-sm" onclick='promptOptions(${JSON.stringify(m).replace(/'/g, "&#39;")}, "${shopId}")'>+ เพิ่ม (${m.price}฿)</button>` : `<span style="color:#dc3545; font-size:0.8em; font-weight:bold;">หมดชั่วคราว</span>`;
                 html += `<div class="list-item"><img src="${img}"><div class="list-info"><h4>${m.name}</h4><span class="price">${m.price} ฿</span></div><div>${btn}</div></div>`;
             });
             document.getElementById('menu-list').innerHTML = html;
             showStep('menu');
         }
 
-        // ⭐️ ระบบเลือกตัวเลือกเสริม (Options) ก่อนหยิบลงตะกร้า
-        function promptOptions(menuId, shopId) {
+        // ⭐️ ระบบเลือกตัวเลือกเสริม (Options) 
+        function promptOptions(menu, shopId) {
             if (state.cartShopId && state.cartShopId !== shopId) {
                 return Swal.fire({ title: 'ขออภัยค่ะ', text: 'ระบบรองรับการสั่งทีละ 1 ร้านค้านะคะ กรุณาล้างตะกร้าก่อนค่ะ', icon: 'warning', showCancelButton: true, confirmButtonText: 'ล้างตะกร้าใหม่' }).then((r) => {
-                    if(r.isConfirmed) { state.cart = []; state.cartShopId = shopId; promptOptions(menuId, shopId); }
+                    if(r.isConfirmed) { state.cart = []; state.cartShopId = shopId; promptOptions(menu, shopId); }
                 });
             }
             state.cartShopId = shopId;
-            const menu = state.menus.find(m => m.menuId === menuId);
             
             if(!menu.options || menu.options.length === 0) { return proceedAdd(menu, []); }
 
@@ -659,14 +676,10 @@
                 title: menu.name, html: htmlForm, showCancelButton: true, confirmButtonText: 'ใส่ตะกร้า', cancelButtonText: 'ยกเลิก',
                 preConfirm: () => {
                     const selected = [];
-                    document.querySelectorAll('.swal-opt-cb:checked').forEach(cb => {
-                        selected.push({ name: cb.value, price: parseFloat(cb.getAttribute('data-price')) });
-                    });
+                    document.querySelectorAll('.swal-opt-cb:checked').forEach(cb => { selected.push({ name: cb.value, price: parseFloat(cb.getAttribute('data-price')) }); });
                     return selected;
                 }
-            }).then((result) => {
-                if (result.isConfirmed) { proceedAdd(menu, result.value); }
-            });
+            }).then((result) => { if (result.isConfirmed) { proceedAdd(menu, result.value); } });
         }
 
         function proceedAdd(menu, selectedOptions) {
@@ -675,7 +688,7 @@
             
             let existIdx = state.cart.findIndex(i => {
                 if(i.menuId !== menu.menuId) return false;
-                let optStr1 = i.selectedOptions.map(o=>o.name).sort().join(',');
+                let optStr1 = i.selectedOptions.map(o=>o).sort().join(',');
                 let optStr2 = selectedOptions.map(o=>o.name).sort().join(',');
                 return optStr1 === optStr2;
             });
@@ -687,8 +700,7 @@
         }
 
         function updateCartBadge() {
-            const cnt = state.cart.reduce((a,b)=>a+b.quantity, 0);
-            document.getElementById('cart-badge').innerText = cnt;
+            const cnt = state.cart.reduce((a,b)=>a+b.quantity, 0); document.getElementById('cart-badge').innerText = cnt;
             const el = document.getElementById('float-cart');
             if(cnt > 0) el.classList.remove('empty'); else el.classList.add('empty');
         }
@@ -718,9 +730,7 @@
                     </div>
                 </div>`;
             });
-            document.getElementById('cart-items').innerHTML = html;
-            document.getElementById('cart-total').innerText = total;
-            showStep('cart');
+            document.getElementById('cart-items').innerHTML = html; document.getElementById('cart-total').innerText = total; showStep('cart');
         }
 
         function changeQty(idx, amt) {
@@ -731,8 +741,7 @@
 
         function proceedToCheckout() {
             if(!state.cart.length) return;
-            document.getElementById('custAddress').value = ""; 
-            showStep('delivery');
+            document.getElementById('custAddress').value = ""; showStep('delivery');
         }
 
         function initMap() {
@@ -813,15 +822,11 @@
 
         function previewSlip(input) {
             if(input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    const img = new Image(); img.onload = () => {
-                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let w = img.width; let h = img.height; const MAX = 800;
-                        if(w>h) { if(w>MAX) {h*=MAX/w; w=MAX;} } else { if(h>MAX) {w*=MAX/h; h=MAX;} }
-                        canvas.width = w; canvas.height = h; ctx.drawImage(img,0,0,w,h);
-                        state.slipBase64 = canvas.toDataURL('image/jpeg', 0.7); document.getElementById('slip-preview').src = state.slipBase64; document.getElementById('slip-preview').style.display = 'block';
-                    }; img.src = e.target.result;
-                }; reader.readAsDataURL(input.files[0]);
+                resizeImage(input.files[0], (base64) => {
+                    state.slipBase64 = base64;
+                    document.getElementById('slip-preview').src = base64;
+                    document.getElementById('slip-preview').style.display = 'block';
+                }, 800); 
             }
         }
 
@@ -926,10 +931,9 @@
             showLoader(); await api({ action: 'updateShopStatus', shopId: state.shopId, isOpen: isOpen, promptPay: null }); hideLoader();
         }
 
-        // ⭐️ แก้ไขข้อมูลร้านค้า (Profile)
         function editShopProfile() {
             const myShop = state.shops.find(s => s.shopId === state.shopId);
-            state.tempCoverBase64 = null;
+            state.tempImageBase64 = null;
             Swal.fire({
                 title: 'แก้ไขข้อมูลร้าน',
                 html: `
@@ -942,7 +946,7 @@
                         <span id="swal-scover-status" style="color:#28a745; font-size:12px; margin-left:10px;"></span>
                     </div>`,
                 showCancelButton: true, confirmButtonText: 'บันทึก',
-                preConfirm: () => { return { shopName: document.getElementById('swal-sname').value, category: document.getElementById('swal-scat').value, promptPay: document.getElementById('swal-spp').value, imageBase64: state.tempCoverBase64 }; }
+                preConfirm: () => { return { shopName: document.getElementById('swal-sname').value, category: document.getElementById('swal-scat').value, promptPay: document.getElementById('swal-spp').value, imageBase64: state.tempImageBase64 }; }
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     showLoader('บันทึกข้อมูล...');
@@ -951,21 +955,16 @@
                 }
             });
         }
-        function handleShopCoverChange(input) {
+        
+        function handleImageChange(input) {
             if(input.files && input.files[0]) {
-                const reader = new FileReader(); reader.onload = e => {
-                    const img = new Image(); img.onload = () => {
-                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let w = img.width; let h = img.height; const MAX = 600;
-                        if(w>h) { if(w>MAX) {h*=MAX/w; w=MAX;} } else { if(h>MAX) {w*=MAX/h; h=MAX;} }
-                        canvas.width = w; canvas.height = h; ctx.drawImage(img,0,0,w,h);
-                        state.tempCoverBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                        document.getElementById('swal-scover-status').innerText = '✅ อัปโหลดแล้ว';
-                    }; img.src = e.target.result;
-                }; reader.readAsDataURL(input.files[0]);
+                resizeImage(input.files[0], (base64) => {
+                    state.tempImageBase64 = base64;
+                    document.getElementById('swal-scover-status').innerText = '✅ อัปโหลดรูปพร้อมบันทึกแล้ว';
+                }, 600); 
             }
         }
 
-        // ⭐️ จัดการเมนู & ตัวเลือกเสริม
         function renderAdminMenuList() {
             const myMenus = state.menus.filter(m => m.shopId === state.shopId);
             let mHtml = '';
@@ -977,7 +976,7 @@
                         <div style="font-size:0.8em; color:#888;">${m.options && m.options.length ? 'มีตัวเลือกเสริม' : 'ไม่มีตัวเลือกเสริม'}</div>
                     </div>
                     <div style="display:flex; gap:10px; align-items:center;">
-                        <button class="btn btn-outline btn-sm" style="padding:2px 8px;" onclick='openMenuModal(${JSON.stringify(m)})'>✏️</button>
+                        <button class="btn btn-outline btn-sm" style="padding:2px 8px;" onclick='openMenuModal(${JSON.stringify(m).replace(/'/g, "&#39;")})'>✏️</button>
                         <label class="switch"><input type="checkbox" ${checkedState} onchange="toggleMenu('${m.menuId}', this.checked)"><span class="slider"></span></label>
                     </div>
                 </div>`;
@@ -993,7 +992,7 @@
             let mCat = isNew ? state.shops.find(s=>s.shopId===state.shopId).category : menuObj.category;
             let optsStr = isNew || !menuObj.options ? '' : menuObj.options.map(o => o.name + ":" + o.choices.map(c => c.name + (c.price>0?'+'+c.price:'')).join(',')).join('\n');
             
-            state.tempCoverBase64 = null;
+            state.tempImageBase64 = null;
 
             Swal.fire({
                 title: isNew ? 'เพิ่มเมนูใหม่' : 'แก้ไขเมนู',
@@ -1032,7 +1031,7 @@
                     }
                     return {
                         menuId: mId, name: document.getElementById('m-name').value, price: parseFloat(document.getElementById('m-price').value),
-                        category: document.getElementById('m-cat').value, imageBase64: state.tempCoverBase64, options: optionsParsed
+                        category: document.getElementById('m-cat').value, imageBase64: state.tempImageBase64, options: optionsParsed
                     };
                 }
             }).then(async (res) => {
@@ -1093,18 +1092,15 @@
         async function riderAction(act, num) { showLoader(); await api({ action: act, orderNumber: num }); loadRiderJobs(); }
         function takePhoto(num, type) { const input = document.getElementById('photo-upload'); input.setAttribute('data-num', num); input.setAttribute('data-type', type); input.click(); }
         function skipPhoto(num, type) { Swal.fire({title:'ข้ามการถ่ายรูป?', text:'ยืนยันอัปเดตสถานะเลยหรือไม่?', icon:'question', showCancelButton:true, confirmButtonText:'ยืนยัน'}).then(r => { if(r.isConfirmed) { showLoader(); api({ action: 'completeDelivery', orderNumber: num, imageBase64: "", type: type }).then(()=>loadRiderJobs()); } }); }
+        
         function handlePhotoUpload(input) {
             if (input.files && input.files[0]) {
                 const num = input.getAttribute('data-num'); const type = input.getAttribute('data-type');
-                const reader = new FileReader(); showLoader('อัปโหลดรูป...');
-                reader.onload = e => {
-                    const img = new Image(); img.onload = () => {
-                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let w = img.width; let h = img.height; const MAX = 800;
-                        if(w>h) { if(w>MAX) {h*=MAX/w; w=MAX;} } else { if(h>MAX) {w*=MAX/h; h=MAX;} }
-                        canvas.width = w; canvas.height = h; ctx.drawImage(img,0,0,w,h);
-                        api({ action: 'completeDelivery', orderNumber: num, imageBase64: canvas.toDataURL('image/jpeg', 0.8), type: type }).then(()=>loadRiderJobs()); input.value = '';
-                    }; img.src = e.target.result;
-                }; reader.readAsDataURL(input.files[0]);
+                resizeImage(input.files[0], (base64) => {
+                    showLoader('กำลังอัปโหลดรูป...');
+                    api({ action: 'completeDelivery', orderNumber: num, imageBase64: base64, type: type }).then(()=>loadRiderJobs()); 
+                    input.value = '';
+                }, 800); 
             }
         }
     </script>
