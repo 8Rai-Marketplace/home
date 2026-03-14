@@ -41,7 +41,7 @@
         .category-icon { font-size: 1.8em; display: block; margin-bottom: 5px; }
 
         .list-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eee; align-items: center; }
-        .list-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 10px; }
+        .list-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 10px; background: #f8f9fa; }
         .list-info { flex: 1; }
         .list-info h4 { margin: 0 0 4px 0; font-size: 1em; color: #333; }
         .list-info p { margin: 0; font-size: 0.85em; color: #666; }
@@ -366,6 +366,18 @@
             tempImageBase64: null 
         };
 
+        // ⭐️ ฟังก์ชันแปลงลิงก์ Google Drive ให้แสดงรูปได้
+        function getDirectImageUrl(url) {
+            if (!url) return 'https://via.placeholder.com/150';
+            if (url.includes('drive.google.com')) {
+                const match = url.match(/[-\w]{25,}/);
+                if (match && match[0]) {
+                    return `https://drive.google.com/uc?export=view&id=${match[0]}`;
+                }
+            }
+            return url;
+        }
+
         // ⭐️ ฟังก์ชันย่อขนาดรูปภาพ (ใช้ร่วมกันได้ทุกส่วน)
         function resizeImage(file, callback, maxWidth) {
             const reader = new FileReader();
@@ -613,7 +625,7 @@
             shopList.forEach(s => {
                 const badge = s.isOpen ? '<span class="badge badge-green" style="position:absolute; top:5px; right:5px;">เปิด</span>' : '<span class="badge badge-red" style="position:absolute; top:5px; right:5px;">ปิด</span>';
                 const opacity = s.isOpen ? '1' : '0.5';
-                const img = s.imageUrl || 'https://via.placeholder.com/150?text=Shop';
+                const img = s.imageUrl ? getDirectImageUrl(s.imageUrl) : 'https://via.placeholder.com/150?text=Shop';
                 const onClickStr = s.isOpen ? `openShop('${s.shopId}')` : `Swal.fire('ร้านปิด','ร้าน ${s.shopName} ปิดให้บริการขณะนี้','info')`;
                 html += `<div class="card" style="position:relative; opacity:${opacity}" onclick="${onClickStr}">${badge}<img src="${img}"><h3>${s.shopName}</h3><p>${s.category}</p></div>`;
             });
@@ -639,11 +651,11 @@
         function openShop(shopId) {
             const shop = state.shops.find(s => s.shopId === shopId);
             if(!shop) return;
-            document.getElementById('shop-header').innerHTML = `<img src="${shop.imageUrl || 'https://via.placeholder.com/150'}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;"><div><h3 style="margin:0; color:#1e3c72;">${shop.shopName}</h3><p style="margin:0; font-size:0.85em; color:#666;">${shop.category}</p></div>`;
+            document.getElementById('shop-header').innerHTML = `<img src="${shop.imageUrl ? getDirectImageUrl(shop.imageUrl) : 'https://via.placeholder.com/150'}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;"><div><h3 style="margin:0; color:#1e3c72;">${shop.shopName}</h3><p style="margin:0; font-size:0.85em; color:#666;">${shop.category}</p></div>`;
             const shopMenus = state.menus.filter(m => m.shopId === shopId);
             let html = '';
             shopMenus.forEach(m => {
-                const img = m.imageUrl || 'https://via.placeholder.com/150';
+                const img = m.imageUrl ? getDirectImageUrl(m.imageUrl) : 'https://via.placeholder.com/150';
                 let btn = m.isAvailable ? `<button class="btn btn-outline btn-sm" onclick='promptOptions(${JSON.stringify(m).replace(/'/g, "&#39;")}, "${shopId}")'>+ เพิ่ม (${m.price}฿)</button>` : `<span style="color:#dc3545; font-size:0.8em; font-weight:bold;">หมดชั่วคราว</span>`;
                 html += `<div class="list-item"><img src="${img}"><div class="list-info"><h4>${m.name}</h4><span class="price">${m.price} ฿</span></div><div>${btn}</div></div>`;
             });
@@ -875,7 +887,7 @@
                 document.getElementById('admin-shop-name').innerText = myShop.shopName;
                 document.getElementById('admin-shop-cat').innerText = myShop.category;
                 document.getElementById('admin-shop-pp').innerText = `PromptPay: ${myShop.promptpay}`;
-                document.getElementById('admin-shop-img').src = myShop.imageUrl || 'https://via.placeholder.com/150';
+                document.getElementById('admin-shop-img').src = myShop.imageUrl ? getDirectImageUrl(myShop.imageUrl) : 'https://via.placeholder.com/150';
                 document.getElementById('admin-shop-open').checked = myShop.isOpen;
             }
 
@@ -912,7 +924,7 @@
                         </div>`;
                     }
                     
-                    let slipBtn = o.slipUrl ? `<a href="${o.slipUrl}" target="_blank" style="font-size:0.8em; color:#1e3c72; float:right;">ดูสลิป</a>` : '';
+                    let slipBtn = o.slipUrl ? `<a href="${getDirectImageUrl(o.slipUrl)}" target="_blank" style="font-size:0.8em; color:#1e3c72; float:right;">ดูสลิป</a>` : '';
                     let notesHtml = o.notes ? `<p style="margin:4px 0; font-size:0.8em; color:#e65100; background:#fffde7; padding:4px;">โน้ต: ${o.notes}</p>` : '';
                     oList.innerHTML += `<div class="order-item" style="border-left: 4px solid #ff9800; background:#fff; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #eee;">
                         <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><b>#${o.orderNumber.slice(-6)}</b><span class="badge badge-green">${o.status}</span></div>
