@@ -965,7 +965,7 @@
             showLoader(); await api({ action: 'updateShopStatus', shopId: state.shopId, isOpen: isOpen, promptPay: null }); hideLoader();
         }
 
-        // ⭐️ เปลี่ยนระบบแก้ไขร้านค้าของ Shop Admin ให้เป็น Dropdown
+        // ⭐️ เปลี่ยนระบบแก้ไขร้านค้าของ Shop Admin ให้เป็น Dropdown 21 หมวดหมู่
         function editShopProfile() {
             const myShop = state.shops.find(s => s.shopId === state.shopId);
             state.tempImageBase64 = null;
