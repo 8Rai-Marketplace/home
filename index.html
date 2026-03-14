@@ -366,13 +366,20 @@
             tempImageBase64: null 
         };
 
-        // ⭐️ ฟังก์ชันแปลงลิงก์ Google Drive ให้แสดงรูปได้ (ท่าไม้ตาย lh3)
+        // ⭐️ ฟังก์ชันแปลงลิงก์ให้แสดงรูปได้ (ท่าไม้ตายทะลวงบล็อก)
         function getDirectImageUrl(url) {
             if (!url) return 'https://via.placeholder.com/150';
+            
+            // 1. ถ้าใน Sheet พี่ณะใส่เป็นลิงก์ lh3 หรือเว็บฝากรูปอื่นมาตรงๆ ให้ใช้งานได้ทันทีเลยค่ะ
+            if (!url.includes('drive.google.com')) {
+                return url;
+            }
+            
+            // 2. ถ้าอัปโหลดผ่านระบบแล้วได้ลิงก์ Drive มา ให้แปลงเป็น Thumbnail API 
+            // (เบื้องหลังมันจะดึงข้อมูลผ่านเซิร์ฟเวอร์ lh3/lh4 ของ Google อัตโนมัติค่ะ)
             const match = url.match(/[-\w]{25,}/);
             if (match && match[0]) {
-                // ใช้ CDN Server ของ Google เอง โหลดไวและไม่โดนบล็อกค่ะ
-                return `https://lh3.googleusercontent.com/d/${match[0]}`;
+                return `https://drive.google.com/thumbnail?id=${match[0]}&sz=w800`;
             }
             return url;
         }
@@ -624,7 +631,7 @@
             shopList.forEach(s => {
                 const badge = s.isOpen ? '<span class="badge badge-green" style="position:absolute; top:5px; right:5px;">เปิด</span>' : '<span class="badge badge-red" style="position:absolute; top:5px; right:5px;">ปิด</span>';
                 const opacity = s.isOpen ? '1' : '0.5';
-                const img = s.imageUrl ? getDirectImageUrl(s.imageUrl) : 'https://via.placeholder.com/150?text=Shop';
+                const img = getDirectImageUrl(s.imageUrl);
                 const onClickStr = s.isOpen ? `openShop('${s.shopId}')` : `Swal.fire('ร้านปิด','ร้าน ${s.shopName} ปิดให้บริการขณะนี้','info')`;
                 html += `<div class="card" style="position:relative; opacity:${opacity}" onclick="${onClickStr}">${badge}<img src="${img}"><h3>${s.shopName}</h3><p>${s.category}</p></div>`;
             });
@@ -650,11 +657,11 @@
         function openShop(shopId) {
             const shop = state.shops.find(s => s.shopId === shopId);
             if(!shop) return;
-            document.getElementById('shop-header').innerHTML = `<img src="${shop.imageUrl ? getDirectImageUrl(shop.imageUrl) : 'https://via.placeholder.com/150'}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;"><div><h3 style="margin:0; color:#1e3c72;">${shop.shopName}</h3><p style="margin:0; font-size:0.85em; color:#666;">${shop.category}</p></div>`;
+            document.getElementById('shop-header').innerHTML = `<img src="${getDirectImageUrl(shop.imageUrl)}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;"><div><h3 style="margin:0; color:#1e3c72;">${shop.shopName}</h3><p style="margin:0; font-size:0.85em; color:#666;">${shop.category}</p></div>`;
             const shopMenus = state.menus.filter(m => m.shopId === shopId);
             let html = '';
             shopMenus.forEach(m => {
-                const img = m.imageUrl ? getDirectImageUrl(m.imageUrl) : 'https://via.placeholder.com/150';
+                const img = getDirectImageUrl(m.imageUrl);
                 let btn = m.isAvailable ? `<button class="btn btn-outline btn-sm" onclick='promptOptions(${JSON.stringify(m).replace(/'/g, "&#39;")}, "${shopId}")'>+ เพิ่ม (${m.price}฿)</button>` : `<span style="color:#dc3545; font-size:0.8em; font-weight:bold;">หมดชั่วคราว</span>`;
                 html += `<div class="list-item"><img src="${img}"><div class="list-info"><h4>${m.name}</h4><span class="price">${m.price} ฿</span></div><div>${btn}</div></div>`;
             });
@@ -886,7 +893,7 @@
                 document.getElementById('admin-shop-name').innerText = myShop.shopName;
                 document.getElementById('admin-shop-cat').innerText = myShop.category;
                 document.getElementById('admin-shop-pp').innerText = `PromptPay: ${myShop.promptpay}`;
-                document.getElementById('admin-shop-img').src = myShop.imageUrl ? getDirectImageUrl(myShop.imageUrl) : 'https://via.placeholder.com/150';
+                document.getElementById('admin-shop-img').src = getDirectImageUrl(myShop.imageUrl);
                 document.getElementById('admin-shop-open').checked = myShop.isOpen;
             }
 
@@ -952,12 +959,23 @@
                         <label>ชื่อร้าน:</label> <input id="swal-sname" type="text" value="${myShop.shopName}">
                         <label>หมวดหมู่ (เช่น ชานม, ก๋วยเตี๋ยว):</label> <input id="swal-scat" type="text" value="${myShop.category}">
                         <label>เบอร์ PromptPay:</label> <input id="swal-spp" type="text" value="${myShop.promptpay}">
-                        <label>เปลี่ยนรูปปก (ถ้าต้องการ):</label><br>
-                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('shop-cover-upload').click()">อัปโหลดรูป</button>
-                        <span id="swal-scover-status" style="color:#28a745; font-size:12px; margin-left:10px;"></span>
+                        <label>รูปปก (เลือกอัปโหลด หรือ วางลิงก์รูป):</label><br>
+                        <div style="display:flex; gap:5px; margin-bottom:5px;">
+                            <button class="btn btn-outline btn-sm" style="flex:1;" onclick="document.getElementById('shop-cover-upload').click()">📂 เลือกรูปจากเครื่อง</button>
+                            <input id="swal-simg-url" type="text" placeholder="หรือวางลิงก์รูปที่นี่" value="${myShop.imageUrl || ''}" style="flex:2; margin:0; padding:8px; font-size:12px;">
+                        </div>
+                        <span id="swal-scover-status" style="color:#28a745; font-size:12px; display:block;"></span>
                     </div>`,
                 showCancelButton: true, confirmButtonText: 'บันทึก',
-                preConfirm: () => { return { shopName: document.getElementById('swal-sname').value, category: document.getElementById('swal-scat').value, promptPay: document.getElementById('swal-spp').value, imageBase64: state.tempImageBase64 }; }
+                preConfirm: () => { 
+                    return { 
+                        shopName: document.getElementById('swal-sname').value, 
+                        category: document.getElementById('swal-scat').value, 
+                        promptPay: document.getElementById('swal-spp').value, 
+                        imageBase64: state.tempImageBase64,
+                        imageUrl: document.getElementById('swal-simg-url').value 
+                    }; 
+                }
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     showLoader('บันทึกข้อมูล...');
@@ -974,6 +992,8 @@
                 resizeImage(input.files[0], (base64) => {
                     state.tempImageBase64 = base64;
                     document.getElementById('swal-scover-status').innerText = '✅ อัปโหลดรูปพร้อมบันทึกแล้ว';
+                    const urlInput = document.getElementById('swal-simg-url');
+                    if(urlInput) urlInput.value = ''; // ลบ URL ออกถ้าเลือกรูปใหม่
                 }, 600); 
             }
         }
@@ -1004,6 +1024,7 @@
             let mPrice = isNew ? '' : menuObj.price;
             let mCat = isNew ? state.shops.find(s=>s.shopId===state.shopId).category : menuObj.category;
             let optsStr = isNew || !menuObj.options ? '' : menuObj.options.map(o => o.name + ":" + o.choices.map(c => c.name + (c.price>0?'+'+c.price:'')).join(',')).join('\n');
+            let mImg = isNew ? '' : (menuObj.imageUrl || '');
             
             state.tempImageBase64 = null;
 
@@ -1014,9 +1035,12 @@
                         <label>ชื่อเมนู:</label> <input id="m-name" type="text" value="${mName}" placeholder="เช่น ข้าวผัดกะเพรา">
                         <label>ราคา (บาท):</label> <input id="m-price" type="number" value="${mPrice}">
                         <label>หมวดหมู่:</label> <input id="m-cat" type="text" value="${mCat}">
-                        <label>รูปภาพ (ถ้ามี):</label><br>
-                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('shop-cover-upload').click()">อัปโหลดรูป</button>
-                        <span id="swal-scover-status" style="color:#28a745; font-size:12px; margin-left:10px;"></span>
+                        <label>รูปภาพ (เลือกอัปโหลด หรือ วางลิงก์รูป):</label><br>
+                        <div style="display:flex; gap:5px; margin-bottom:5px;">
+                            <button class="btn btn-outline btn-sm" style="flex:1;" onclick="document.getElementById('shop-cover-upload').click()">📂 เลือกรูป</button>
+                            <input id="swal-simg-url" type="text" placeholder="หรือวางลิงก์รูปที่นี่" value="${mImg}" style="flex:2; margin:0; padding:8px; font-size:12px;">
+                        </div>
+                        <span id="swal-scover-status" style="color:#28a745; font-size:12px; display:block;"></span>
                         
                         <div style="background:#fff8e1; border:1px dashed #ffc107; padding:10px; border-radius:8px; margin-top:15px;">
                             <label style="color:#d32f2f; font-weight:bold;">ตัวเลือกเสริม (พิมพ์ตามรูปแบบ)</label><br>
@@ -1044,7 +1068,8 @@
                     }
                     return {
                         menuId: mId, name: document.getElementById('m-name').value, price: parseFloat(document.getElementById('m-price').value),
-                        category: document.getElementById('m-cat').value, imageBase64: state.tempImageBase64, options: optionsParsed
+                        category: document.getElementById('m-cat').value, imageBase64: state.tempImageBase64, 
+                        imageUrl: document.getElementById('swal-simg-url').value, options: optionsParsed
                     };
                 }
             }).then(async (res) => {
