@@ -18,7 +18,6 @@
     <style>
         * { font-family: 'Prompt', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
         body { background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); min-height: 100vh; display: flex; flex-direction: column; color: #333; }
-        /* ⭐️ บีบลดขนาดแถบ Header ด้านบนให้เล็กลง */
         .header { background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 8px 10px; text-align: center; font-size: 1.1em; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
         .container { max-width: 800px; margin: 0 auto; padding: 15px; flex: 1; width: 100%; padding-bottom: 80px;}
         .step { display: none; animation: fadeIn 0.4s ease; background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
@@ -103,7 +102,6 @@
         .radar-sweep { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: conic-gradient(from 0deg, transparent 75%, rgba(0,123,255,0.3) 100%); animation: radarSpin 3s linear infinite; border-radius: 50%; pointer-events: none; }
         .radar-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-style: dashed; border-width: 1px; border-radius: 50%; pointer-events: none; }
         
-        /* ⭐️ บีบวงให้เบียดกันสำหรับ 8 กม. */
         .r-200  { width: 15%; height: 15%; border-color: rgba(40, 167, 69, 0.5); } 
         .r-500  { width: 30%; height: 30%; border-color: rgba(40, 167, 69, 0.5); } 
         .r-1000 { width: 45%; height: 45%; border-color: rgba(255, 193, 7, 0.6); } 
@@ -122,6 +120,13 @@
         .radar-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(5px); animation: fadeIn 0.3s ease; }
         .radar-modal-content { width: 95vw; max-width: 400px; text-align: center; }
         .radar-modal-radar { width: 320px; height: 320px; margin: 0 auto 20px auto; background: #fff; }
+
+        /* ⭐️ ดีไซน์หน้าใบเสร็จ */
+        .receipt-box { background: #fff; padding: 25px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); margin: 20px auto; max-width: 400px; border-top: 5px solid #1e3c72; color: #333; }
+        .receipt-header { text-align: center; margin-bottom: 15px; border-bottom: 2px dashed #ddd; padding-bottom: 15px; }
+        .receipt-item { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px; line-height: 1.4; }
+        .receipt-total { border-top: 2px dashed #ddd; padding-top: 15px; margin-top: 10px; font-weight: bold; font-size: 1.3em; display: flex; justify-content: space-between; }
+        .receipt-footer { text-align: center; margin-top: 25px; font-size: 13px; color: #888; }
     </style>
 </head>
 <body>
@@ -252,7 +257,7 @@
                 <input type="radio" id="payTransfer" name="payType" value="โอนเงิน" checked onchange="toggleSlip()">
                 <label for="payTransfer">📱 โอนเงิน (สแกน QR)</label>
                 <input type="radio" id="payCash" name="payType" value="เงินสด" onchange="toggleSlip()">
-                <label for="payCash">💵 จ่ายเงินสด</label>
+                <label for="payCash" id="label-payCash">💵 จ่ายเงินสด</label>
             </div>
 
             <div id="qr-section" style="text-align: center; background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
@@ -271,8 +276,18 @@
                 <button class="btn btn-success" onclick="submitOrder()">✅ ยืนยันคำสั่งซื้อ</button>
             </div>
         </div>
+        
+        <!-- ⭐️ STEP 7: Receipt (หน้าใบเสร็จ) -->
+        <div class="step" id="step-receipt">
+            <h2 style="color: #28a745; border-bottom: 2px solid #28a745;">✅ ชำระเงินสำเร็จ</h2>
+            <div class="receipt-box" id="receipt-content"></div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; margin-top: 20px;">
+                <button class="btn btn-warning" style="width: 100%; background: #ff9800; color: white; border: none; box-shadow: 0 4px 10px rgba(255,152,0,0.3);" onclick="showCustomerStatus()">🟢 ดูสถานะออร์เดอร์ (Realtime)</button>
+                <button class="btn btn-outline" style="width: 100%;" onclick="goHome()">🏠 กลับหน้าหลัก</button>
+            </div>
+        </div>
 
-        <!-- STEP 6: Customer Order Status -->
+        <!-- STEP 8: Customer Order Status -->
         <div class="step" id="step-status">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2 style="margin:0; border:none; padding:0;">สถานะออร์เดอร์ของฉัน</h2>
@@ -448,7 +463,6 @@
     <!-- Hidden Input for Shop Profile & Menu Image -->
     <input type="file" id="shop-cover-upload" accept="image/*" style="display:none;" onchange="handleImageChange(this)">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbxtUiAa1kkD5lKbrb6xMX7uLLAhjDb1JKspzzgglqDpGz2lwoff6bdFnmBWtUxUzZxl/exec"; 
         const LIFF_ID = "2009447225-WEWgCqpA";
@@ -981,7 +995,7 @@
             return payload + ("0000" + crc.toString(16)).slice(-4).toUpperCase();
         }
 
-        // ⭐️ จุดที่มีบั๊ก (แก้ไขแล้ว)
+        // ⭐️ จุดที่มีบั๊ก (แก้ไขแล้ว) พร้อมซ่อนปุ่มเงินสดกรณีจัดส่ง
         function calculateSummary() {
             const n = document.getElementById('custName').value.trim(); const p = document.getElementById('custPhone').value.trim(); const a = document.getElementById('custAddress').value.trim();
             const isDel = document.getElementById('delTypeDel').checked;
@@ -991,10 +1005,17 @@
 
             let dist = 0; let fee = 0; let food = state.cart.reduce((s,i)=>s+(i.price*i.quantity),0);
             if(isDel) {
-                // ⭐️ แก้ไขเป็น state.marker
                 dist = calculateDistance(state.marker.getLatLng().lat, state.marker.getLatLng().lng);
                 if(dist > 8.0) return Swal.fire('ไกลเกินไป', 'ขออภัยค่ะ ระยะจัดส่งเกิน 8.0 กม.', 'error');
                 fee = calculateDeliveryFee(dist, food);
+                
+                // ⭐️ ซ่อนปุ่มจ่ายเงินสด ถ้าเลือกจัดส่ง บังคับโอนเงินเพื่อความปลอดภัย
+                document.getElementById('label-payCash').style.display = 'none';
+                document.getElementById('payTransfer').checked = true;
+                toggleSlip();
+            } else {
+                // ⭐️ ถ้ารับหน้าร้าน สามารถเลือกจ่ายเงินสดได้
+                document.getElementById('label-payCash').style.display = 'block';
             }
 
             let html = '';
@@ -1022,7 +1043,6 @@
                 let distanceDisplay = dist.toFixed(2) + ' กม.';
                 if(modalDistanceText) modalDistanceText.textContent = distanceDisplay;
                 
-                // ⭐️ แก้ไขเป็น state.marker
                 const lat = state.marker.getLatLng().lat; const lng = state.marker.getLatLng().lng; const dLat = lat - state.shopLocation[0]; const dLng = lng - state.shopLocation[1]; const angle = Math.atan2(dLat, dLng); 
                 const distanceInMeters = dist * 1000; const displayDistance = Math.min(distanceInMeters, 8000); 
                 
@@ -1052,13 +1072,43 @@
             if(isCash) { state.slipBase64 = null; document.getElementById('slip-preview').style.display='none'; document.getElementById('slip-file').value=''; }
         }
 
+        // ⭐️ เปลี่ยนระบบเช็คสลิปให้ตรวจสอบหน้าตา QR Code ก่อน
         function previewSlip(input) {
             if(input.files && input.files[0]) {
-                resizeImage(input.files[0], (base64) => {
-                    state.slipBase64 = base64;
-                    document.getElementById('slip-preview').src = base64;
-                    document.getElementById('slip-preview').style.display = 'block';
-                }, 800); 
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        const MAX_WIDTH = 800; const MAX_HEIGHT = 800;
+                        let width = img.width; let height = img.height;
+                        if(width > height) { if(width > MAX_WIDTH) { height *= MAX_WIDTH/width; width = MAX_WIDTH; } }
+                        else { if(height > MAX_HEIGHT) { width *= MAX_HEIGHT/height; height = MAX_HEIGHT; } }
+                        
+                        canvas.width = width; canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const imageData = ctx.getImageData(0, 0, width, height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+                        
+                        if(!code) {
+                            Swal.fire({ icon: 'warning', title: '<span style="color: #ff4444;">ไม่พบสแกนคิวอาร์โค้ดในภาพ</span>', html: '<span style="font-size: 1.15em;">กรุณาอัปโหลดสลิปโอนเงินที่ถูกต้องค่ะ</span>', confirmButtonColor: '#ff4444' });
+                            input.value = '';
+                            document.getElementById('slip-preview').style.display = 'none';
+                            state.slipBase64 = null;
+                            return;
+                        }
+                        
+                        state.slipBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                        document.getElementById('slip-preview').src = state.slipBase64;
+                        document.getElementById('slip-preview').style.display = 'block';
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -1072,8 +1122,48 @@
                 shopId: state.cartShopId, uid: state.uid, lineDisplayName: state.name, customerName: document.getElementById('custName').value.trim(), phone: document.getElementById('custPhone').value.trim(), address: isDel ? document.getElementById('custAddress').value.trim() : 'รับหน้าร้าน', lat: isDel ? state.marker.getLatLng().lat : 0, lng: isDel ? state.marker.getLatLng().lng : 0, items: state.cart, totalFood: food, deliveryFee: fee, totalAmount: food+fee, distance: dist, additionalNotes: document.getElementById('custNote').value, paymentMethod: isCash ? 'เงินสด' : 'โอนเงิน', slip: state.slipBase64
             };
             showLoader('ส่งคำสั่งซื้อเข้าร้าน...');
-            const res = await api({ action: 'submitOrder', data: payload }); hideLoader();
-            if(res && res.success) { Swal.fire({title:'สำเร็จ!', text:`ส่งออร์เดอร์ให้ร้านแล้วค่ะ\nหมายเลข : ${res.orderNumber}`, icon:'success'}).then(()=>{ clearCart(); fetchCustomerOrders(); }); }
+            const res = await api({ action: 'submitOrder', data: payload }); 
+            hideLoader();
+            
+            // ⭐️ ดัดแปลงหน้าจอตอนสั่งสำเร็จ ให้โชว์ใบเสร็จ
+            if(res && res.success) { 
+                Swal.fire({
+                    title: 'สั่งซื้อสำเร็จ', 
+                    html: `<div style="margin-bottom: 20px;"><div style="font-size: 80px; text-shadow: 0 0 20px #ff4444; color: #ff4444;">❤️</div></div><div style="margin-top: 10px; font-size: 1.1em; color: #1e3c72; font-weight: bold;">ออร์เดอร์ของคุณถูกส่งไปยังร้านค้าแล้ว</div><br><span style="color: #ff4444; font-weight: bold; background: #fff5f5; padding: 5px 10px; border-radius: 5px; display: inline-block;">โปรดรอรับการติดต่อ<br>จากร้านค้าและทีมจัดส่งค่ะ</span>`, 
+                    confirmButtonText: 'ดูใบเสร็จ', 
+                    confirmButtonColor: '#1e3c72', 
+                    allowOutsideClick: false 
+                }).then(()=>{ 
+                    renderReceipt(payload, res.orderNumber);
+                    clearCart(); 
+                    showStep('receipt'); 
+                }); 
+            }
+        }
+
+        // ⭐️ สร้างใบเสร็จให้ดูสะอาดตา
+        function renderReceipt(orderData, orderNumber) {
+            const receiptContent = document.getElementById('receipt-content'); 
+            let itemsHtml = '';
+            orderData.items.forEach(item => {
+                let toppingsText = item.selectedOptions && item.selectedOptions.length > 0 ? `<br><small style="color:#666;">- ${item.selectedOptions.join(', ')}</small>` : ''; 
+                itemsHtml += `<div class="receipt-item"><div style="flex:3; text-align: left; padding-right: 10px;"><strong>${item.name}</strong> (x${item.quantity})${toppingsText}</div><div style="flex:1; text-align: right; font-weight: bold;">${item.price * item.quantity} ฿</div></div>`;
+            });
+            const now = new Date(); 
+            const dateStr = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }); 
+            const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+            
+            const shop = state.shops.find(s => s.shopId === orderData.shopId);
+            const shopName = shop ? shop.shopName : 'ร้านค้าใน 8 Rai Market';
+
+            let deliveryRow = '';
+            if(orderData.deliveryFee > 0 || orderData.distance > 0) { 
+                deliveryRow = `<div class="receipt-item" style="color: #666;"><span>ค่าจัดส่ง (${orderData.distance.toFixed(2)} กม.) </span><span style="font-weight: bold;">${orderData.deliveryFee} ฿</span></div>`; 
+            } else { 
+                deliveryRow = `<div class="receipt-item" style="color: #666;"><span>วิธีจัดส่ง : </span><span style="font-weight: bold;">รับหน้าร้าน</span></div>`; 
+            }
+            
+            receiptContent.innerHTML = `<div class="receipt-header"><h3 style="margin:0; color:#1e3c72; font-size: 1.4em;">${shopName}</h3><p style="margin:5px 0 0 0; font-size:11px; color:#555;">ตลาดนัดออนไลน์ 8 Rai</p><p style="margin:15px 0 0 0; font-size:1.6em; color:#333; font-weight: bold;">ใบเสร็จ</p></div><div style="font-size: 13px; color: #555; margin-bottom: 15px; line-height: 1.6;"><div style="display: flex; justify-content: space-between;"><span>ออร์เดอร์ : </span> <strong>${orderNumber || '-'}</strong></div><div style="display: flex; justify-content: space-between;"><span>วันที่ : </span> <strong>${dateStr} ${timeStr}</strong></div><div style="display: flex; justify-content: space-between;"><span>ลูกค้า : </span> <strong>${orderData.customerName}</strong></div></div><div style="border-top: 1px dashed #ddd; padding-top: 15px; margin-bottom: 15px;">${itemsHtml}</div>${deliveryRow}<div class="receipt-total"><span>ชำระ ( ${orderData.paymentMethod} ) </span><span style="color: #ff4444;">${orderData.totalAmount} ฿</span></div><div class="receipt-footer">ขอบคุณที่ใช้บริการ 8 Rai Marketplace ค่ะ</div>`;
         }
 
         async function fetchCustomerOrders() {
