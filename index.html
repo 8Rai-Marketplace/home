@@ -18,7 +18,8 @@
     <style>
         * { font-family: 'Prompt', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
         body { background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); min-height: 100vh; display: flex; flex-direction: column; color: #333; }
-        .header { background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 15px 10px; text-align: center; font-size: 1.2em; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        /* ⭐️ บีบลดขนาดแถบ Header ด้านบนให้เล็กลง */
+        .header { background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 8px 10px; text-align: center; font-size: 1.1em; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
         .container { max-width: 800px; margin: 0 auto; padding: 15px; flex: 1; width: 100%; padding-bottom: 80px;}
         .step { display: none; animation: fadeIn 0.4s ease; background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: #1e3c72; margin-bottom: 15px; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center;}
@@ -138,7 +139,7 @@
             <div id="shop-header" class="shop-banner"></div>
             
             <div style="background: #fff8e1; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.8em; color: #856404; text-align: center;">
-                🚨 <b>กติกา:</b> สั่งอาหาร 1 ร้านค้า ต่อ 1 ออร์เดอร์นะคะ
+                🚨 <b>กติกา : </b> สั่งอาหาร 1 ร้านค้า ต่อ 1 ออร์เดอร์นะคะ
             </div>
 
             <h2>รายการเมนู</h2>
@@ -151,7 +152,7 @@
             <div id="cart-shop-name" style="font-weight: bold; color: #2a5298; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;"></div>
             <div id="cart-items"></div>
             <div style="background: #fafafa; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: right; font-size: 1.2em; font-weight: bold;">
-                รวมค่าอาหาร: <span id="cart-total" style="color: #d32f2f;">0</span> ฿
+                รวมเป็นเงิน : <span id="cart-total" style="color: #d32f2f;">0</span> ฿
             </div>
             <div class="grid-2">
                 <button class="btn btn-outline" onclick="showStep('menu')">เลือกซื้อเพิ่ม</button>
@@ -182,7 +183,7 @@
             </form>
             
             <div style="background: #eef2f7; padding: 12px; border-radius: 8px; font-size: 0.8em; color: #555; margin-bottom: 15px;">
-                <b>เงื่อนไขค่าส่ง (คำนวณทางอากาศ):</b><br>
+                <b>เงื่อนไขค่าส่ง (คำนวณทางอากาศ) : </b><br>
                 - ระยะ 0 - 500 เมตร : 20 บาท<br>
                 - เกิน 500 เมตร : +0.019 บาท/เมตร<br>
                 <span style="color: #d32f2f;">* รัศมีให้บริการสูงสุด 4.5 กม.</span>
@@ -198,10 +199,10 @@
         <div class="step" id="step-pay">
             <h2>💰 ชำระเงิน</h2>
             <div style="background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>ค่าอาหาร:</span><b id="sum-food">0 ฿</b></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>ค่าจัดส่ง <small id="sum-dist" style="color:#888;"></small>:</span><b id="sum-del">0 ฿</b></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>ราคาอาหาร : </span><b id="sum-food">0 ฿</b></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>ค่าจัดส่ง <small id="sum-dist" style="color:#888;"></small> : </span><b id="sum-del">0 ฿</b></div>
                 <hr style="border: 0; border-top: 1px dashed #eee; margin: 10px 0;">
-                <div style="display:flex; justify-content:space-between; font-size: 1.2em; color: #d32f2f;"><span>ยอดรวมทั้งสิ้น:</span><b id="sum-total">0 ฿</b></div>
+                <div style="display:flex; justify-content:space-between; font-size: 1.2em; color: #d32f2f;"><span>ยอดรวมทั้งสิ้น : </span><b id="sum-total">0 ฿</b></div>
             </div>
 
             <div class="toggle-group">
@@ -273,7 +274,7 @@
                     <option value="อาหารฮาลาล">อาหารฮาลาล</option>
                     <option value="อื่นๆ">อื่นๆ</option>
                 </select>
-                <input type="text" id="new-shop-uid" placeholder="UID ไลน์ของเจ้าของร้าน *" required>
+                <input type="text" id="new-shop-uid" placeholder="LINE User ID ของเจ้าของร้าน *" required>
                 <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="createNewShop()">บันทึกเปิดร้าน</button>
             </div>
 
@@ -282,7 +283,7 @@
                 <h3 style="font-size: 1.1em; color: #28a745; margin-bottom: 5px;">🛵 สร้างไรเดอร์ใหม่</h3>
                 <p style="font-size: 0.8em; color: #666; margin-bottom: 15px;">ผูกสิทธิ์ให้ผู้ใช้เป็นพนักงานจัดส่ง</p>
                 <input type="text" id="new-rider-name" placeholder="ชื่อไรเดอร์ (เช่น วินพี่ตูน) *" required>
-                <input type="text" id="new-rider-uid" placeholder="UID ไลน์ของไรเดอร์ *" required>
+                <input type="text" id="new-rider-uid" placeholder="LINE User ID ของไรเดอร์ *" required>
                 <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="createNewRider()">บันทึกไรเดอร์</button>
             </div>
         </div>
@@ -322,11 +323,11 @@
                         <div>
                             <h4 id="admin-shop-name" style="margin:0; font-size:1.1em;">ชื่อร้าน...</h4>
                             <p id="admin-shop-cat" style="margin:0; font-size:0.85em; color:#666;">หมวดหมู่...</p>
-                            <p id="admin-shop-pp" style="margin:0; font-size:0.85em; color:#28a745; font-weight:bold;">PromptPay: ...</p>
+                            <p id="admin-shop-pp" style="margin:0; font-size:0.85em; color:#28a745; font-weight:bold;">PromptPay : ...</p>
                         </div>
                     </div>
                     <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <strong style="color:#d32f2f;">สถานะเปิด/ปิดร้าน :</strong>
+                        <strong style="color:#d32f2f;">สถานะเปิด/ปิดร้าน : </strong>
                         <label class="switch"><input type="checkbox" id="admin-shop-open" onchange="toggleShopOpen()"><span class="slider"></span></label>
                     </div>
                 </div>
@@ -354,7 +355,7 @@
             <h2>🛵 ระบบรับงานจัดส่ง</h2>
             
             <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee;">
-                <span style="font-weight: bold; color: #333;">สถานะรับงาน: <span id="rider-status-text" style="color: #dc3545;">ออฟไลน์</span></span>
+                <span style="font-weight: bold; color: #333;">สถานะรับงาน : <span id="rider-status-text" style="color: #dc3545;">ออฟไลน์</span></span>
                 <label class="switch"><input type="checkbox" id="rider-online-toggle" onchange="toggleRiderOnline()"><span class="slider"></span></label>
             </div>
 
@@ -526,12 +527,12 @@
                 title: '👤 โปรไฟล์ของคุณ',
                 html: `
                     <div style="text-align:left; font-size: 14px; color: #555;">
-                        <p style="margin-bottom:5px;"><b>ชื่อ:</b> ${state.name || 'ไม่ได้ล็อกอิน'}</p>
-                        <p style="margin-bottom:5px;"><b>สิทธิ์ผู้ใช้:</b> ${state.role}</p>
+                        <p style="margin-bottom:5px;"><b>ชื่อ : </b> ${state.name || 'ไม่ได้ล็อกอิน'}</p>
+                        <p style="margin-bottom:5px;"><b>สิทธิ์ผู้ใช้ : </b> ${state.role}</p>
                         <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin-top: 15px; border: 1px dashed #ccc;">
-                            <p style="margin: 0 0 5px 0; font-size: 12px; color: #888;">รหัสประจำตัว (UID):</p>
+                            <p style="margin: 0 0 5px 0; font-size: 12px; color: #888;">รหัสประจำตัว (LINE User ID) : </p>
                             <p style="margin: 0 0 10px 0; word-break: break-all; font-family: monospace; color: #1e3c72; font-weight: bold;">${state.uid || 'ไม่พบข้อมูล'}</p>
-                            <button class="btn btn-sm btn-primary" style="width:100%;" onclick="copyUID()">📋 คัดลอกรหัส UID</button>
+                            <button class="btn btn-sm btn-primary" style="width:100%;" onclick="copyUID()">📋 คัดลอกรหัส LINE User ID</button>
                         </div>
                         <hr style="margin: 15px 0; border: 0; border-top: 1px dashed #eee;">
                         ${modeBtn}
@@ -544,7 +545,7 @@
         function copyUID() {
             const el = document.createElement('textarea');
             el.value = state.uid; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-            Swal.fire({toast:true, position:'top', icon:'success', title:'คัดลอก UID แล้ว!', showConfirmButton:false, timer:1500});
+            Swal.fire({toast:true, position:'top', icon:'success', title:'คัดลอก LINE User ID แล้ว!', showConfirmButton:false, timer:1500});
         }
 
         function switchMode(mode) {
@@ -616,9 +617,12 @@
                 state.shops = data.shops; state.menus = data.menus;
                 state.role = data.user.role; state.shopId = data.user.shopId; state.isOnline = data.user.isOnline;
                 
-                if(state.role === 'SHOP' || state.role === 'RIDER' || state.role === 'ADMIN') {
+                // ⭐️ แอดมิน (Super Admin, ร้านค้า, ไรเดอร์) เข้าเว็บมาปุ๊บ ให้เริ่มต้นที่โหมด "ลูกค้า" ก่อนเสมอ
+                if(state.role === 'SHOP' || state.role === 'RIDER') {
                     state.currentMode = state.role; updateHeaderBadge(); enterDashboard();
-                } else { state.currentMode = 'CUSTOMER'; updateHeaderBadge(); goHome(); }
+                } else { 
+                    state.currentMode = 'CUSTOMER'; updateHeaderBadge(); goHome(); 
+                }
                 
                 try { 
                     const savedCart = localStorage.getItem('8rai_cart'); const savedShop = localStorage.getItem('8rai_cart_shop');
@@ -906,7 +910,7 @@
             document.getElementById('sum-food').innerText = food + ' ฿'; document.getElementById('sum-dist').innerText = isDel ? `(${dist.toFixed(1)}กม.)` : '(หน้าร้าน)'; document.getElementById('sum-del').innerText = fee + ' ฿'; document.getElementById('sum-total').innerText = (food+fee) + ' ฿';
             
             const shop = state.shops.find(s => s.shopId === state.cartShopId);
-            document.getElementById('shop-promptpay-display').innerText = "พร้อมเพย์ร้าน: " + (shop.promptpay || 'ไม่ระบุ');
+            document.getElementById('shop-promptpay-display').innerText = "พร้อมเพย์ร้าน : " + (shop.promptpay || 'ไม่ระบุ');
             
             let pp = shop.promptpay ? shop.promptpay.replace(/[^0-9]/g, '') : "0000000000";
             let pl = generatePromptPayPayload(pp, food+fee);
@@ -942,7 +946,7 @@
             };
             showLoader('ส่งคำสั่งซื้อเข้าร้าน...');
             const res = await api({ action: 'submitOrder', data: payload }); hideLoader();
-            if(res && res.success) { Swal.fire({title:'สำเร็จ!', text:`ส่งออร์เดอร์ให้ร้านแล้วค่ะ\nหมายเลข: ${res.orderNumber}`, icon:'success'}).then(()=>{ clearCart(); fetchCustomerOrders(); }); }
+            if(res && res.success) { Swal.fire({title:'สำเร็จ!', text:`ส่งออร์เดอร์ให้ร้านแล้วค่ะ\nหมายเลข : ${res.orderNumber}`, icon:'success'}).then(()=>{ clearCart(); fetchCustomerOrders(); }); }
         }
 
         async function fetchCustomerOrders() {
@@ -955,8 +959,8 @@
                     const shop = state.shops.find(s => s.shopId === o.shopId);
                     list.innerHTML += `<div class="order-item" style="border-left: 4px solid #1e3c72; background:#fff; padding:15px; border-radius:10px; margin-bottom:10px;">
                         <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><b>${o.orderNumber.slice(-6)}</b><span class="badge badge-green">${o.status}</span></div>
-                        <p style="margin:5px 0; font-size:0.9em; color:#666;">ร้าน: ${shop ? shop.shopName : o.shopId}</p>
-                        <p style="margin:5px 0; font-size:0.9em;">ยอด: <strong style="color:#d32f2f;">${o.totalAmount} ฿</strong> (${o.paymentMethod})</p>
+                        <p style="margin:5px 0; font-size:0.9em; color:#666;">ร้าน : ${shop ? shop.shopName : o.shopId}</p>
+                        <p style="margin:5px 0; font-size:0.9em;">ยอด : <strong style="color:#d32f2f;">${o.totalAmount} ฿</strong> (${o.paymentMethod})</p>
                     </div>`;
                 });
             } else { list.innerHTML = '<p style="text-align:center;">ไม่มีออร์เดอร์</p>'; }
@@ -975,7 +979,7 @@
             if(myShop) {
                 document.getElementById('admin-shop-name').innerText = myShop.shopName;
                 document.getElementById('admin-shop-cat').innerText = myShop.category;
-                document.getElementById('admin-shop-pp').innerText = `PromptPay: ${myShop.promptpay}`;
+                document.getElementById('admin-shop-pp').innerText = `PromptPay : ${myShop.promptpay}`;
                 document.getElementById('admin-shop-img').src = getDirectImageUrl(myShop.imageUrl);
                 document.getElementById('admin-shop-open').checked = myShop.isOpen;
             }
@@ -985,7 +989,8 @@
                 document.getElementById('admin-stat-count').innerText = res.stats.count || 0;
             }
 
-            if(!silent) renderAdminMenuList();
+            // ⭐️ อัปเดตเมนูทุกครั้งที่โหลดหน้า ไม่ว่าจะ silent หรือไม่
+            renderAdminMenuList();
 
             // ⭐️ ปรับดีไซน์ออร์เดอร์ร้านค้าให้ดูสะอาดตาแบบร้านชานม
             const oList = document.getElementById('admin-orders-list'); oList.innerHTML = '';
@@ -1004,7 +1009,7 @@
                             } else {
                                 let statRider = o.riderAccepted ? '<span style="color:#28a745;">(รับงานแล้ว)</span>' : '<span style="color:#ff9800;">(รอรับงาน..)</span>';
                                 let changeRiderBtn = !o.riderAccepted ? `<button class="btn btn-danger btn-sm" style="float:right; padding:2px 5px;" onclick="callRider('${o.orderNumber}', '${state.shopId}')">🔄 เปลี่ยนคน</button><div style="clear:both;"></div>` : '';
-                                actionHtml = `<div style="margin-top:10px; background:#f8f9fa; padding:8px; border-radius:8px; font-size:0.85em; border:1px dashed #ccc;"><b>ผู้ส่ง:</b> ${o.riderName} ${statRider} ${changeRiderBtn}</div>`;
+                                actionHtml = `<div style="margin-top:10px; background:#f8f9fa; padding:8px; border-radius:8px; font-size:0.85em; border:1px dashed #ccc;"><b>ผู้ส่ง : </b> ${o.riderName} ${statRider} ${changeRiderBtn}</div>`;
                             }
                         }
                         actionHtml += `<div style="margin-top:10px; display:flex; gap:5px;">
@@ -1015,7 +1020,7 @@
                     }
                     
                     let slipBtn = o.slipUrl ? `<a href="${getDirectImageUrl(o.slipUrl)}" target="_blank" style="font-size:0.8em; color:#1e3c72; background: #eef2f7; padding: 4px 8px; border-radius: 6px; text-decoration: none;">ดูสลิป 🧾</a>` : '';
-                    let notesHtml = o.notes ? `<div style="margin:8px 0; font-size:0.85em; color:#e65100; background:#fffde7; padding:8px; border-radius: 6px; border: 1px dashed #ffca28;">📌 โน้ต: ${o.notes}</div>` : '';
+                    let notesHtml = o.notes ? `<div style="margin:8px 0; font-size:0.85em; color:#e65100; background:#fffde7; padding:8px; border-radius: 6px; border: 1px dashed #ffca28;">📌 โน้ต : ${o.notes}</div>` : '';
                     let statusBg = o.status === 'รอรับออร์เดอร์' ? '#ff9900' : (o.status === 'จัดส่งสำเร็จ' ? '#28a745' : (o.status==='ยกเลิก'?'#dc3545':'#007bff'));
                     
                     oList.innerHTML += `<div class="order-item" style="border-left: none; border-top: 4px solid ${statusBg}; background:#fff; padding:15px; border-radius:10px; margin-bottom:15px; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
@@ -1024,12 +1029,12 @@
                             <span class="badge badge-green" style="background: ${statusBg}; font-size: 11px;">${o.status}</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; font-size:0.9em; margin-bottom:4px;">
-                            <span style="color:#555;">ลูกค้า: <b style="color:#222;">${o.customerName}</b></span>
+                            <span style="color:#555;">ลูกค้า : <b style="color:#222;">${o.customerName}</b></span>
                             <a href="tel:${o.phone}" style="color:#007bff; text-decoration:none; font-weight: bold;">📞 ${o.phone}</a>
                         </div>
                         <div style="background:#f8f9fa; padding:10px; margin:8px 0; font-size:0.9em; border-radius:8px; border: 1px dashed #ddd; line-height: 1.5; color: #444;">${o.itemsStr}</div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                            <span style="font-size:0.9em; color:#666;">ยอดอาหาร: <b style="color:#d32f2f; font-size: 1.15em;">${o.totalFood} ฿</b></span>
+                            <span style="font-size:0.9em; color:#666;">ยอดอาหาร : <b style="color:#d32f2f; font-size: 1.15em;">${o.totalFood} ฿</b></span>
                             ${slipBtn}
                         </div>
                         ${notesHtml}
@@ -1057,14 +1062,14 @@
                 title: 'แก้ไขข้อมูลร้าน',
                 html: `
                     <div style="text-align:left; font-size:14px;">
-                        <label>ชื่อร้าน:</label> <input id="swal-sname" type="text" value="${myShop.shopName}">
-                        <label>หมวดหมู่ร้านค้า:</label> 
+                        <label>ชื่อร้าน : </label> <input id="swal-sname" type="text" value="${myShop.shopName}">
+                        <label>หมวดหมู่ร้านค้า : </label> 
                         <select id="swal-scat" style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; background: #fafafa; outline: none;">
                             <option value="">-- เลือกหมวดหมู่ --</option>
                             ${catOptions}
                         </select>
-                        <label>เบอร์ PromptPay:</label> <input id="swal-spp" type="text" value="${myShop.promptpay}">
-                        <label>รูปปก (เลือกอัปโหลด หรือ วางลิงก์รูป):</label><br>
+                        <label>เบอร์ PromptPay : </label> <input id="swal-spp" type="text" value="${myShop.promptpay}">
+                        <label>รูปปก (เลือกอัปโหลด หรือ วางลิงก์รูป) : </label><br>
                         <div style="display:flex; gap:5px; margin-bottom:5px;">
                             <button class="btn btn-outline btn-sm" style="flex:1;" onclick="document.getElementById('shop-cover-upload').click()">📂 เลือกรูปจากเครื่อง</button>
                             <input id="swal-simg-url" type="text" placeholder="หรือวางลิงก์รูปที่นี่" value="${myShop.imageUrl ? getDirectImageUrl(myShop.imageUrl) : ''}" style="flex:2; margin:0; padding:8px; font-size:12px;">
@@ -1173,10 +1178,10 @@
                 title: isNew ? 'เพิ่มเมนูใหม่' : 'แก้ไขเมนู',
                 html: `
                     <div style="text-align:left; font-size:14px; max-height: 450px; overflow-y:auto; padding-right:10px; overflow-x:hidden;">
-                        <label>ชื่อเมนู:</label> <input id="m-name" type="text" value="${mName}" placeholder="ข้าวราดกระเพราทะเล">
-                        <label>ราคา (บาท):</label> <input id="m-price" type="number" value="${mPrice}">
-                        <label>หมวดหมู่ในร้าน:</label> <input id="m-cat" type="text" value="${mCat}" placeholder="เมนูกระเพรา">
-                        <label>รูปภาพ (เลือกอัปโหลด หรือ วางลิงก์รูป):</label><br>
+                        <label>ชื่อเมนู : </label> <input id="m-name" type="text" value="${mName}" placeholder="ข้าวราดกระเพราทะเล">
+                        <label>ราคา (บาท) : </label> <input id="m-price" type="number" value="${mPrice}">
+                        <label>หมวดหมู่ในร้าน : </label> <input id="m-cat" type="text" value="${mCat}" placeholder="เมนูกระเพรา">
+                        <label>รูปภาพ (เลือกอัปโหลด หรือ วางลิงก์รูป) : </label><br>
                         <div style="display:flex; gap:5px; margin-bottom:5px;">
                             <button class="btn btn-outline btn-sm" style="flex:1;" onclick="document.getElementById('shop-cover-upload').click()">📂 เลือกรูป</button>
                             <input id="swal-simg-url" type="text" placeholder="หรือวางลิงก์รูปที่นี่" value="${mImg}" style="flex:2; margin:0; padding:8px; font-size:12px;">
@@ -1184,8 +1189,8 @@
                         <span id="swal-scover-status" style="color:#28a745; font-size:12px; display:block;"></span>
                         
                         <div style="background:#f8f9fa; border:1px solid #ddd; padding:10px; border-radius:8px; margin-top:15px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                                <label style="color:#1e3c72; font-weight:bold; margin:0; display:block;">📝 ตัวเลือกเสริม</label>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap: 10px;">
+                                <label style="color:#1e3c72; font-weight:bold; margin:0; display:block; white-space:nowrap;">📝 ตัวเลือกเสริม</label>
                                 ${templateSelectHtml}
                             </div>
                             <div id="options-builder-container"></div>
@@ -1307,10 +1312,10 @@
                     let shopNameDisplay = shop ? shop.shopName : j.shopId;
                     
                     list.innerHTML += `<div class="order-item" style="border-left: 4px solid #1e3c72; background:#fff; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #eee;">
-                        <div style="display:flex; justify-content:space-between;"><b>#${j.orderNumber.slice(-6)}</b> <span style="color:#d32f2f; font-weight:bold;">ค่าส่ง: ${j.deliveryFee} ฿</span></div>
-                        <p style="margin:5px 0; font-size:0.9em; background:#eef2f7; padding:5px; border-radius:5px;"><b>รับที่:</b> ${shopNameDisplay}</p>
-                        <p style="margin:5px 0; font-size:0.9em;"><b>ส่งที่:</b> ${j.customerName} - ${j.address}</p>
-                        <p style="margin:5px 0; font-size:0.9em;"><b>โทร:</b> <a href="tel:${j.phone}">${j.phone}</a></p>
+                        <div style="display:flex; justify-content:space-between;"><b>#${j.orderNumber.slice(-6)}</b> <span style="color:#d32f2f; font-weight:bold;">ค่าส่ง : ${j.deliveryFee} ฿</span></div>
+                        <p style="margin:5px 0; font-size:0.9em; background:#eef2f7; padding:5px; border-radius:5px;"><b>รับที่ : </b> ${shopNameDisplay}</p>
+                        <p style="margin:5px 0; font-size:0.9em;"><b>ส่งที่ : </b> ${j.customerName} - ${j.address}</p>
+                        <p style="margin:5px 0; font-size:0.9em;"><b>โทร : </b> <a href="tel:${j.phone}">${j.phone}</a></p>
                         ${mapLinkHtml}${acts}
                     </div>`;
                 });
