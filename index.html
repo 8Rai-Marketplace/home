@@ -7,17 +7,19 @@
     <meta property="og:description" content="รวมของกินย่านท่าอิฐ-ไทรม้า ราคาหน้าร้าน 100% ไม่บวกเพิ่ม! สั่งเลย ส่งตรงถึงหน้าบ้าน" />
     <meta property="og:image" content="https://lh3.googleusercontent.com/d/1T5FP3aCeXo2v6BrvCTUYMGZx_JFj8Top" />
     <meta property="og:type" content="website" />
-    <title>8 Rai Marketplace</title>
+    <title>8 Rai Marketplace 🔹Delivery🔹</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    
     <style>
         * { font-family: 'Prompt', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); min-height: 100vh; display: flex; flex-direction: column; color: #333; overflow-x: hidden; }
+        body { background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); min-height: 100vh; display: flex; flex-direction: column; color: #333; }
         .header { background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 15px 10px; text-align: center; font-size: 1.2em; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-        .container { max-width: 800px; margin: 0 auto; padding: 15px; flex: 1; width: 100%; }
+        .container { max-width: 800px; margin: 0 auto; padding: 15px; flex: 1; width: 100%; padding-bottom: 80px;}
         .step { display: none; animation: fadeIn 0.4s ease; background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: #1e3c72; margin-bottom: 15px; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center;}
         
@@ -34,20 +36,25 @@
         .card img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #f8f9fa; }
         .card h3 { font-size: 1em; color: #222; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card p { font-size: 0.8em; color: #777; }
+        .category-card { background: #fff5f5; padding: 15px 10px; border-radius: 15px; text-align: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 2px solid transparent; transition: all 0.3s; }
+        .category-card:hover { border-color: #ff4444; transform: translateY(-3px); }
+        .category-icon { font-size: 1.8em; display: block; margin-bottom: 5px; }
 
-        .list-item { display: flex; gap: 12px; padding: 12px; border-bottom: 1px solid #eee; align-items: center; background: #fff; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .list-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; }
+        .list-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eee; align-items: center; }
+        .list-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 10px; }
         .list-info { flex: 1; }
         .list-info h4 { margin: 0 0 4px 0; font-size: 1em; color: #333; }
-        .price { color: #d32f2f; font-weight: bold; font-size: 1.1em; display: block; }
+        .list-info p { margin: 0; font-size: 0.85em; color: #666; }
+        .price { color: #d32f2f; font-weight: bold; font-size: 1.1em; margin-top: 4px; display: block; }
         
         .btn { padding: 10px 15px; border-radius: 25px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; font-size: 0.9em; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-align: center; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-primary { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; box-shadow: 0 4px 10px rgba(42,82,152,0.3); }
         .btn-success { background: linear-gradient(135deg, #28a745, #20c997); color: white; box-shadow: 0 4px 10px rgba(40,167,69,0.3); }
         .btn-danger { background: linear-gradient(135deg, #dc3545, #f86384); color: white; box-shadow: 0 4px 10px rgba(220,53,69,0.3); }
+        .btn-warning { background: linear-gradient(135deg, #ff9800, #ffb74d); color: white; box-shadow: 0 4px 10px rgba(255,152,0,0.3); }
         .btn-outline { background: transparent; border: 2px solid #2a5298; color: #2a5298; }
-        .btn-sm { padding: 6px 12px; font-size: 0.85em; }
+        .btn-sm { padding: 5px 12px; font-size: 0.8em; }
 
         input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; background: #fafafa; outline: none; transition: border 0.3s; }
         input:focus, textarea:focus, select:focus { border-color: #2a5298; background: #fff; }
@@ -61,44 +68,40 @@
         .badge-red { background: #dc3545; }
         .badge-green { background: #28a745; }
 
-        /* ⭐️ Floating Cart Style (โคลนจากร้านชานม) */
-        .float-cart { position: fixed; bottom: 40px; right: 20px; background: #28a745; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(40,167,69,0.5); cursor: move; z-index: 1000; font-size: 1.8em; transition: transform 0.2s; touch-action: none; user-select: none; }
-        .float-cart.empty { background: #95a5a6; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .float-cart:active { transform: scale(0.9); }
-        .cart-count { position: absolute; top: -5px; right: -5px; background: #ff4444; color: white; min-width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white; pointer-events: none;}
-        @keyframes cartPulse { 0% { transform: scale(1); box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4); } 50% { transform: scale(1.05); box-shadow: 0 4px 20px rgba(40, 167, 69, 0.7); } 100% { transform: scale(1); box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4); } }
-        .cart-active-anim { animation: cartPulse 2s infinite; }
+        /* ⭐️ คืนชีพตะกร้าลอยน้ำให้ลากได้ */
+        .float-cart { position: fixed; bottom: 30px; right: 20px; background: linear-gradient(135deg, #007BFF, #00d2ff); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,123,255,0.4); cursor: move; z-index: 1000; font-size: 1.8em; transition: transform 0.2s, background 0.3s; user-select: none; touch-action: none; }
+        .float-cart.empty { background: #95a5a6; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: default; }
+        .float-cart:active { transform: scale(0.95); }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: #ff4444; color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); pointer-events: none;}
 
         .stat-box { background: #f8f9fa; border-radius: 10px; padding: 15px; text-align: center; border: 1px solid #eee; flex: 1; }
         .stat-val { font-size: 1.5em; font-weight: bold; color: #2a5298; }
         .stat-label { font-size: 0.8em; color: #666; }
 
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; vertical-align: middle; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; margin-left: 10px; vertical-align: middle; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 26px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);}
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #28a745; }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        #map { width: 100%; height: 250px; border-radius: 12px; margin-bottom: 10px; z-index: 1; border: 2px solid #e9ecef;}
-        .shop-banner { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
+        #map { width: 100%; height: 200px; border-radius: 12px; margin-bottom: 10px; z-index: 1; }
+        .shop-banner { background: #eef2f7; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #dce4ec;}
         
-        .quantity-control { display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .quantity-btn { width: 30px; height: 30px; border-radius: 50%; font-size: 18px; background: #2a5298; color: white; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
-        .quantity-btn.decrease { background: #dc3545; }
-        .quantity-display { font-size: 16px; font-weight: bold; width: 30px; text-align: center; }
-
-        /* Custom Checkbox for Options */
-        .opt-checkbox { display: flex; align-items: center; margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; cursor: pointer; border: 1px solid #eee; }
-        .opt-checkbox input { margin: 0 10px 0 0; width: 18px; height: 18px; accent-color: #2a5298; }
-        .opt-label { flex: 1; font-size: 0.9em; color: #333; }
-        .opt-price { color: #d32f2f; font-weight: bold; font-size: 0.9em; }
-
-        .order-item { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee;}
+        /* Modal for Menu Creation & Options */
+        .swal2-html-container { font-family: 'Prompt', sans-serif !important; text-align: left !important; }
+        .option-checkbox-label { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee; transition: 0.2s; }
+        .option-checkbox-label:hover { background: #eef2f7; border-color: #2a5298; }
+        
+        /* Action buttons for cart */
+        .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: none; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; }
+        .qty-btn.minus { background: #6c757d; }
+        .qty-btn.plus { background: #28a745; }
+        .qty-btn.del { background: transparent; color: #dc3545; font-size: 1.2em; border: none; }
     </style>
 </head>
 <body>
-    <div id="loader-overlay" class="loader-overlay"><div class="spinner"></div><p id="loader-text" style="color:#2a5298; font-weight:bold; margin-top:15px;">กำลังโหลดตลาดนัด...</p></div>
+    <div id="loader-overlay" class="loader-overlay"><div class="spinner"></div><p id="loader-text">กำลังโหลดตลาดนัด...</p></div>
     
     <div class="header">
         <span onclick="goHome()" style="cursor:pointer;">🛒 8 Rai Market</span>
@@ -110,32 +113,34 @@
         <!-- STEP 1: Home Categories -->
         <div class="step" id="step-home">
             <div id="staff-dashboard-btn" style="display:none; margin-bottom: 15px;">
-                <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1em;" onclick="enterDashboard()">⚙️ จัดการร้านค้า / รับงานจัดส่ง</button>
+                <button class="btn btn-warning" style="width: 100%; padding: 12px; color: #fff;" onclick="enterDashboard()">🛠️ จัดการหน้าร้านของฉัน</button>
             </div>
             
-            <div style="background: #fff8e1; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 0.85em; color: #856404; border: 1px dashed #ffeeba; text-align: center;">
-                🚨 <b>กติกาตลาด:</b> สั่งอาหาร 1 ร้านค้า ต่อ 1 ออร์เดอร์นะคะ (โอนเงินตรงเข้าร้านค้าเลยจ้า)
+            <div style="position: relative; margin-bottom: 15px;">
+                <input type="text" id="search-input" placeholder="🔍 ค้นหาร้านค้า, ก๋วยเตี๋ยว, ชานม..." oninput="searchMenu()" style="padding-right: 35px;">
+                <span id="clear-search-btn" onclick="clearSearch()" style="position: absolute; right: 15px; top: 18px; color: #aaa; cursor: pointer; display: none; font-weight: bold;">❌</span>
             </div>
 
-            <h2>หมวดหมู่อาหาร</h2>
+            <h2>หมวดหมู่อาหาร <span style="font-size:0.7em; font-weight:normal; color:#666;" onclick="renderCategories()">(ดูทั้งหมด)</span></h2>
             <div id="cat-grid" class="grid-3"></div>
             
-            <div style="display: flex; gap: 10px; margin-top: 20px; margin-bottom: 10px;">
-                <button class="btn btn-outline" style="flex: 1;" onclick="showStep('status'); fetchCustomerOrders();">🟢 สถานะออร์เดอร์</button>
-                <button class="btn btn-primary" style="background: #6c757d; border:none; flex: 1;" onclick="shareMarket()">📢 แชร์ชวนเพื่อน</button>
-            </div>
-
-            <h2 style="margin-top: 15px;">ร้านค้าทั้งหมด</h2>
-            <div class="search-box-container" style="position: relative; margin-bottom: 15px;">
-                <input type="text" id="search-input" placeholder="🔍 ค้นหาร้านค้า..." oninput="searchMenu()">
-            </div>
+            <h2 style="margin-top: 25px;">ร้านค้าทั้งหมด</h2>
             <div id="shop-grid" class="grid-2"></div>
+            
+            <button class="btn btn-outline" style="width:100%; margin-top: 20px;" onclick="showCustomerStatus()">📜 ดูสถานะ / ประวัติการสั่งซื้อ</button>
         </div>
 
         <!-- STEP 2: Shop Menu -->
         <div class="step" id="step-menu">
             <button class="btn btn-outline btn-sm" onclick="goHome()" style="margin-bottom: 15px;">← กลับตลาด</button>
+            <button class="btn btn-sm" style="float:right; background:#00B900; color:white;" onclick="shareShop()">📤 แชร์ร้านนี้</button>
+            
             <div id="shop-header" class="shop-banner"></div>
+            
+            <div style="background: #fff8e1; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.8em; color: #856404; text-align: center;">
+                🚨 <b>กติกา:</b> สั่งอาหาร 1 ร้านค้า ต่อ 1 ออร์เดอร์นะคะ
+            </div>
+
             <h2>รายการเมนู</h2>
             <div id="menu-list"></div>
         </div>
@@ -143,9 +148,9 @@
         <!-- STEP 3: Cart -->
         <div class="step" id="step-cart">
             <h2>🛒 ตะกร้าสินค้า</h2>
-            <div id="cart-shop-name" style="font-weight: bold; color: #2a5298; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; font-size:1.1em;"></div>
+            <div id="cart-shop-name" style="font-weight: bold; color: #2a5298; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;"></div>
             <div id="cart-items"></div>
-            <div style="background: #fafafa; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: right; font-size: 1.3em; font-weight: bold; border: 1px dashed #ccc;">
+            <div style="background: #fafafa; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: right; font-size: 1.2em; font-weight: bold;">
                 รวมค่าอาหาร: <span id="cart-total" style="color: #d32f2f;">0</span> ฿
             </div>
             <div class="grid-2">
@@ -173,7 +178,7 @@
                 <input type="text" id="custName" placeholder="ชื่อคุณลูกค้า *" required>
                 <input type="tel" id="custPhone" placeholder="เบอร์โทรศัพท์ *" required>
                 <input type="text" id="custAddress" placeholder="หมู่บ้าน/บ้านเลขที่/ซอย *" required>
-                <textarea id="custNote" placeholder="ข้อความถึงร้านค้า (เพิ่มท็อปปิ้ง, ไม่เผ็ด, ฯลฯ)"></textarea>
+                <textarea id="custNote" placeholder="หมายเหตุเพิ่มเติมถึงร้านค้า"></textarea>
             </form>
             
             <div style="background: #eef2f7; padding: 12px; border-radius: 8px; font-size: 0.8em; color: #555; margin-bottom: 15px;">
@@ -192,11 +197,11 @@
         <!-- STEP 5: Payment -->
         <div class="step" id="step-pay">
             <h2>💰 ชำระเงิน</h2>
-            <div style="background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; color:#555;"><span>ค่าอาหาร:</span><b id="sum-food" style="color:#333;">0 ฿</b></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; color:#555;"><span id="dist-text-label">ค่าจัดส่ง:</span><b id="sum-del" style="color:#333;">0 ฿</b></div>
+            <div style="background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>ค่าอาหาร:</span><b id="sum-food">0 ฿</b></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>ค่าจัดส่ง <small id="sum-dist" style="color:#888;"></small>:</span><b id="sum-del">0 ฿</b></div>
                 <hr style="border: 0; border-top: 1px dashed #eee; margin: 10px 0;">
-                <div style="display:flex; justify-content:space-between; font-size: 1.3em; color: #d32f2f; font-weight:bold;"><span>ยอดรวมทั้งสิ้น:</span><b id="sum-total">0 ฿</b></div>
+                <div style="display:flex; justify-content:space-between; font-size: 1.2em; color: #d32f2f;"><span>ยอดรวมทั้งสิ้น:</span><b id="sum-total">0 ฿</b></div>
             </div>
 
             <div class="toggle-group">
@@ -206,50 +211,57 @@
                 <label for="payCash">💵 จ่ายเงินสด</label>
             </div>
 
-            <div id="qr-section" style="text-align: center; background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px dashed #ccc;">
-                <p style="margin-bottom: 5px; font-weight: bold; color:#1e3c72;">สแกนเพื่อโอนเงินเข้าร้าน</p>
-                <p id="shop-promptpay-display" style="color: #d32f2f; margin-bottom: 10px; font-weight:bold; font-size:1.1em;"></p>
-                <img id="qr-img" src="" style="width: 220px; height: 220px; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin:0 auto;">
-                <p style="font-size:0.8em; color:#888; margin-top:10px;">📸 แคปหน้าจอเพื่อสแกนจ่ายในแอปธนาคาร</p>
-                <div style="margin-top: 15px; background: #fff; padding:10px; border-radius:8px;">
+            <div id="qr-section" style="text-align: center; background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <p style="margin-bottom: 5px; font-weight: bold;">สแกนเพื่อโอนเงินเข้าร้านโดยตรง</p>
+                <p id="shop-promptpay-display" style="color: #2a5298; margin-bottom: 10px; font-size: 1.1em; font-weight: bold;"></p>
+                <img id="qr-img" src="" style="width: 200px; height: 200px; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <div style="margin-top: 15px;">
                     <label style="color: #d32f2f; font-weight: bold; display: block; margin-bottom: 5px;">👇 แนบสลิปโอนเงิน *</label>
-                    <input type="file" id="slip-file" accept="image/*" onchange="previewSlip(this)" style="background: transparent; border:none; padding:0;">
-                    <img id="slip-preview" style="display: none; max-width: 100%; height: 200px; object-fit: contain; margin: 10px auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <input type="file" id="slip-file" accept="image/*" onchange="previewSlip(this)" style="background: white;">
+                    <img id="slip-preview" style="display: none; max-width: 100%; height: 150px; object-fit: contain; margin: 10px auto; border-radius: 8px;">
                 </div>
             </div>
 
             <div class="grid-2">
                 <button class="btn btn-outline" onclick="showStep('delivery')">ย้อนกลับ</button>
-                <button class="btn btn-success" onclick="submitOrder()">✅ ยืนยันสั่งซื้อ</button>
+                <button class="btn btn-success" onclick="submitOrder()">✅ ยืนยันคำสั่งซื้อ</button>
             </div>
         </div>
 
         <!-- STEP 6: Customer Order Status -->
         <div class="step" id="step-status">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2 style="margin:0; border:none; padding:0;">สถานะออร์เดอร์</h2>
+                <h2 style="margin:0; border:none; padding:0;">สถานะออร์เดอร์ของฉัน</h2>
                 <button class="btn btn-outline btn-sm" onclick="fetchCustomerOrders()">🔄 อัปเดต</button>
             </div>
             <div id="cust-order-list"></div>
-            <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="goHome()">🏠 กลับหน้าหลัก</button>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="goHome()">กลับหน้าหลัก</button>
         </div>
 
         <!-- ========================================== -->
-        <!-- 🏬 SHOP ADMIN DASHBOARD -->
+        <!-- 🏬 SHOP ADMIN DASHBOARD (ระบบจัดการร้านค้า) -->
         <!-- ========================================== -->
         <div class="step" id="step-shop-admin">
-            <h2>🏬 จัดการหน้าร้าน <button class="btn btn-outline btn-sm" style="float: right;" onclick="goHome()">ออก</button></h2>
+            <h2>🏬 ระบบจัดการร้านค้า <button class="btn btn-outline btn-sm" style="float: right;" onclick="goHome()">กลับตลาด</button></h2>
             
-            <!-- Shop Profile Edit -->
-            <div style="background: #eef2f7; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #dce4ec;">
+            <!-- ตั้งค่าร้านค้า -->
+            <div style="background: #eef2f7; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px dashed #2a5298;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <strong style="font-size: 1.1em; color:#1e3c72;" id="admin-shop-name">ชื่อร้าน...</strong>
-                    <div style="display:flex; align-items:center; gap:5px;">
-                        <span style="font-size:0.8em; color:#555;">สถานะ:</span>
-                        <label class="switch"><input type="checkbox" id="admin-shop-open" onchange="updateShopToggle()"><span class="slider"></span></label>
+                    <strong style="font-size: 1.1em; color: #1e3c72;">ตั้งค่าข้อมูลร้าน</strong>
+                    <button class="btn btn-primary btn-sm" onclick="editShopProfile()">✏️ แก้ไข</button>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <img id="admin-shop-img" src="https://via.placeholder.com/150" style="width:60px; height:60px; border-radius:8px; object-fit:cover;">
+                    <div>
+                        <h4 id="admin-shop-name" style="margin:0; font-size:1.1em;">ชื่อร้าน...</h4>
+                        <p id="admin-shop-cat" style="margin:0; font-size:0.85em; color:#666;">หมวดหมู่...</p>
+                        <p id="admin-shop-pp" style="margin:0; font-size:0.85em; color:#28a745; font-weight:bold;">PromptPay: ...</p>
                     </div>
                 </div>
-                <button class="btn btn-outline btn-sm" style="width:100%; margin-bottom:10px; background:#fff;" onclick="openShopProfileEditor()">✏️ แก้ไขโปรไฟล์ร้าน / เบอร์พร้อมเพย์</button>
+                <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="color:#d32f2f;">สถานะเปิด/ปิดร้าน :</strong>
+                    <label class="switch"><input type="checkbox" id="admin-shop-open" onchange="toggleShopOpen()"><span class="slider"></span></label>
+                </div>
             </div>
 
             <!-- Stats -->
@@ -258,18 +270,18 @@
                 <div class="stat-box"><div class="stat-val" id="admin-stat-count">0</div><div class="stat-label">ออร์เดอร์</div></div>
             </div>
 
-            <!-- Menu Management -->
-            <div style="margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                    <h3 style="font-size: 1.1em; color: #2a5298; margin:0;">📋 เมนูอาหาร</h3>
-                    <button class="btn btn-success btn-sm" onclick="openMenuEditor()">+ เพิ่มเมนูใหม่</button>
-                </div>
-                <div id="admin-menu-list" style="max-height: 300px; overflow-y: auto; padding-right:5px;"></div>
+            <!-- จัดการเมนู -->
+            <div style="margin-bottom: 20px; background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px;">
+                <h3 style="font-size: 1.1em; color: #1e3c72; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    📋 จัดการเมนูอาหาร
+                    <button class="btn btn-success btn-sm" onclick="openMenuModal(null)">➕ เพิ่มเมนูใหม่</button>
+                </h3>
+                <div id="admin-menu-list" style="max-height: 250px; overflow-y: auto; padding-right: 5px;"></div>
             </div>
 
             <!-- Orders -->
             <div>
-                <h3 style="font-size: 1.1em; color: #d32f2f; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                <h3 style="font-size: 1.1em; color: #d32f2f; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                     📦 ออร์เดอร์ร้านคุณ <span class="badge badge-green" style="animation: pulseText 2s infinite;">Auto Refresh</span>
                 </h3>
                 <div id="admin-orders-list"></div>
@@ -280,7 +292,7 @@
         <!-- 🛵 RIDER DASHBOARD -->
         <!-- ========================================== -->
         <div class="step" id="step-rider">
-            <h2>🛵 ระบบรับงานจัดส่ง <button class="btn btn-outline btn-sm" style="float: right;" onclick="goHome()">ปิด</button></h2>
+            <h2>🛵 ระบบรับงานจัดส่ง <button class="btn btn-outline btn-sm" style="float: right;" onclick="goHome()">กลับตลาด</button></h2>
             
             <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee;">
                 <span style="font-weight: bold; color: #333;">สถานะรับงาน: <span id="rider-status-text" style="color: #dc3545;">ออฟไลน์</span></span>
@@ -302,15 +314,18 @@
 
     </div>
 
-    <!-- ⭐️ Floating Cart (ลากได้เหมือนเดิม) -->
-    <div class="float-cart empty" id="float-cart" style="display:none;">
+    <!-- ⭐️ ตะกร้าลอยน้ำ ลากได้ ⭐️ -->
+    <div class="float-cart empty" id="float-cart" onclick="triggerCartClick()">
         <span>🛒</span>
         <span class="cart-count" id="cart-badge">0</span>
     </div>
 
+    <!-- Hidden Input for Shop Profile Image -->
+    <input type="file" id="shop-cover-upload" accept="image/*" style="display:none;" onchange="handleShopCoverChange(this)">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
-        // ⭐️ เปลี่ยนลิงก์นี้เป็น URL Web App ของพี่ณะ
+        // ⭐️ แก้ลิงก์ให้เป็นของพี่ณะ
         const GAS_URL = "https://script.google.com/macros/s/AKfycbxtUiAa1kkD5lKbrb6xMX7uLLAhjDb1JKspzzgglqDpGz2lwoff6bdFnmBWtUxUzZxl/exec"; 
         const LIFF_ID = "2009447225-WEWgCqpA";
 
@@ -319,49 +334,688 @@
             shops: [], menus: [], cart: [], cartShopId: null,
             map: null, marker: null, shopLocation: [13.8825208, 100.4553696], 
             slipBase64: null, adminInterval: null, riderInterval: null,
-            tempSelectedMenu: null // เก็บเมนูชั่วคราวตอนเลือก options
+            tempCoverBase64: null // สำหรับอัปรูปร้าน
         };
 
-        // --- ระบบลากตะกร้า (Drag & Drop) ---
-        const floatCart = document.getElementById('float-cart');
-        let isDragging = false, hasDragged = false;
-        let startX, startY, initialLeft, initialTop;
-
-        floatCart.addEventListener('touchstart', dragStart, {passive: false});
-        floatCart.addEventListener('mousedown', dragStart);
-        
-        function dragStart(e) {
-            if(e.type === 'touchstart') { startX = e.touches[0].clientX; startY = e.touches[0].clientY; } 
-            else { startX = e.clientX; startY = e.clientY; }
-            const rect = floatCart.getBoundingClientRect();
-            if(!floatCart.style.left) { floatCart.style.left = rect.left + 'px'; floatCart.style.top = rect.top + 'px'; floatCart.style.right = 'auto'; floatCart.style.bottom = 'auto'; }
-            initialLeft = parseFloat(floatCart.style.left); initialTop = parseFloat(floatCart.style.top);
-            isDragging = true; hasDragged = false;
-            document.addEventListener('touchmove', drag, {passive: false}); document.addEventListener('mousemove', drag);
-            document.addEventListener('touchend', dragEnd); document.addEventListener('mouseup', dragEnd);
-        }
-        function drag(e) {
-            if(!isDragging) return;
-            let cx, cy;
-            if(e.type === 'touchmove') { cx = e.touches[0].clientX; cy = e.touches[0].clientY; } else { cx = e.clientX; cy = e.clientY; }
-            let dx = cx - startX; let dy = cy - startY;
-            if(Math.abs(dx)>5 || Math.abs(dy)>5) { hasDragged = true; e.preventDefault(); }
-            let nl = initialLeft + dx; let nt = initialTop + dy;
-            nl = Math.max(0, Math.min(nl, window.innerWidth - 60)); nt = Math.max(0, Math.min(nt, window.innerHeight - 60));
-            floatCart.style.left = nl + 'px'; floatCart.style.top = nt + 'px';
-        }
-        function dragEnd(e) {
-            isDragging = false;
-            document.removeEventListener('touchmove', drag); document.removeEventListener('mousemove', drag);
-            document.removeEventListener('touchend', dragEnd); document.removeEventListener('mouseup', dragEnd);
-        }
-        floatCart.addEventListener('click', e => {
-            if(hasDragged) { e.preventDefault(); hasDragged = false; } else { showCartSummary(); }
-        });
-
-        // --- เริ่มต้นระบบ ---
+        // ==========================================
+        // 🟢 INIT & SYSTEM
+        // ==========================================
         window.onload = async function() {
+            initDragCart(); // เปิดใช้งานระบบลากตะกร้า
             try {
                 await liff.init({ liffId: LIFF_ID, withLoginOnExternalBrowser: true });
                 if (liff.isLoggedIn()) {
-                    const
+                    const profile = await liff.getProfile();
+                    state.uid = profile.userId; 
+                    state.name = profile.displayName;
+                    document.getElementById('custName').value = state.name;
+                    loadMarketData();
+                } else { liff.login({ redirectUri: window.location.href }); }
+            } catch(e) { loadMarketData(); } 
+        }
+
+        async function api(payload) {
+            payload.uid = state.uid; payload._t = new Date().getTime();
+            try {
+                const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+                return await res.json();
+            } catch(e) { hideLoader(); Swal.fire('Error', 'เชื่อมต่อเซิร์ฟเวอร์ล้มเหลว', 'error'); throw e; }
+        }
+
+        function showLoader(msg) { document.getElementById('loader-text').innerText = msg || 'กำลังโหลด...'; document.getElementById('loader-overlay').style.display = 'flex'; }
+        function hideLoader() { document.getElementById('loader-overlay').style.display = 'none'; }
+        
+        function showStep(stepId) { 
+            document.querySelectorAll('.step').forEach(el => el.style.display = 'none'); 
+            document.getElementById('step-' + stepId).style.display = 'block'; 
+            window.scrollTo(0,0);
+            
+            const floatCart = document.getElementById('float-cart');
+            if (stepId === 'home' || stepId === 'menu') { floatCart.style.display = 'flex'; } 
+            else { floatCart.style.display = 'none'; }
+            
+            if(state.adminInterval) { clearInterval(state.adminInterval); state.adminInterval = null; }
+            if(state.riderInterval) { clearInterval(state.riderInterval); state.riderInterval = null; }
+
+            if(stepId === 'delivery') setTimeout(initMap, 200);
+            if(stepId === 'shop-admin') { loadShopAdminData(); state.adminInterval = setInterval(loadShopAdminDataSilent, 10000); }
+            if(stepId === 'rider') { loadRiderJobs(); state.riderInterval = setInterval(loadRiderJobsSilent, 10000); }
+        }
+
+        function goHome() { showStep('home'); renderCategories(); }
+        function showCustomerStatus() { fetchCustomerOrders(); }
+
+        // ==========================================
+        // 🛒 DRAG CART LOGIC (คืนชีพ!)
+        // ==========================================
+        let isDragging = false; let hasDragged = false;
+        function initDragCart() {
+            const cartBtn = document.getElementById('float-cart');
+            let startX, startY, initialLeft, initialTop;
+            
+            function onDown(e) {
+                isDragging = true; hasDragged = false;
+                let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+                startX = clientX; startY = clientY;
+                const rect = cartBtn.getBoundingClientRect();
+                if (!cartBtn.style.left) { cartBtn.style.left = rect.left + 'px'; cartBtn.style.top = rect.top + 'px'; cartBtn.style.right = 'auto'; cartBtn.style.bottom = 'auto'; }
+                initialLeft = parseFloat(cartBtn.style.left); initialTop = parseFloat(cartBtn.style.top);
+            }
+            function onMove(e) {
+                if (!isDragging) return;
+                let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+                let dx = clientX - startX; let dy = clientY - startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) hasDragged = true;
+                if (hasDragged) {
+                    e.preventDefault();
+                    let newLeft = initialLeft + dx; let newTop = initialTop + dy;
+                    newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - cartBtn.offsetWidth));
+                    newTop = Math.max(0, Math.min(newTop, window.innerHeight - cartBtn.offsetHeight));
+                    cartBtn.style.left = newLeft + 'px'; cartBtn.style.top = newTop + 'px';
+                }
+            }
+            function onUp(e) { isDragging = false; }
+            
+            cartBtn.addEventListener('mousedown', onDown); document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp);
+            cartBtn.addEventListener('touchstart', onDown, {passive: false}); document.addEventListener('touchmove', onMove, {passive: false}); document.addEventListener('touchend', onUp);
+        }
+        function triggerCartClick() {
+            if(!hasDragged) {
+                if(state.cart.length > 0) showCartSummary();
+                else Swal.fire('ตะกร้าว่างเปล่า', 'เลือกร้านอร่อยๆ แล้วสั่งเลย!', 'info');
+            }
+        }
+
+        // ==========================================
+        // 🛍️ MARKET DATA & RENDER
+        // ==========================================
+        async function loadMarketData() {
+            showLoader('เปิดตลาด...');
+            const data = await api({ action: 'getMarketData' });
+            if(data && !data.error) {
+                state.shops = data.shops; state.menus = data.menus;
+                state.role = data.user.role; state.shopId = data.user.shopId; state.isOnline = data.user.isOnline;
+                
+                if(state.role === 'SHOP' || state.role === 'RIDER') {
+                    document.getElementById('staff-dashboard-btn').style.display = 'block';
+                    const btn = document.getElementById('staff-dashboard-btn').querySelector('button');
+                    btn.innerHTML = state.role === 'SHOP' ? '🛠️ จัดการหน้าร้านของฉัน' : '🛵 เปิดหน้ารับงานจัดส่ง';
+                    btn.className = state.role === 'SHOP' ? 'btn btn-warning' : 'btn btn-success';
+                    
+                    const badge = document.getElementById('user-role-badge');
+                    badge.innerText = state.role === 'SHOP' ? 'ร้านค้า' : 'พนักงานจัดส่ง';
+                    badge.style.background = state.role === 'SHOP' ? '#dc3545' : '#28a745';
+                    
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if(urlParams.get('page') === 'status') { enterDashboard(); return; }
+                }
+                try { 
+                    const savedCart = localStorage.getItem('8rai_cart'); const savedShop = localStorage.getItem('8rai_cart_shop');
+                    if(savedCart) { state.cart = JSON.parse(savedCart); state.cartShopId = savedShop; updateCartBadge(); }
+                    const savedPhone = localStorage.getItem('8rai_phone'); if(savedPhone) document.getElementById('custPhone').value = savedPhone;
+                } catch(e) {}
+                hideLoader(); goHome();
+            } else { hideLoader(); Swal.fire('Error', 'โหลดข้อมูลตลาดล้มเหลว', 'error'); }
+        }
+
+        function enterDashboard() {
+            if(state.role === 'SHOP') showStep('shop-admin');
+            else if (state.role === 'RIDER') showStep('rider');
+        }
+
+        function renderCategories() {
+            const cats = [...new Set(state.shops.map(s => s.category).filter(c => c))];
+            let html = '';
+            cats.forEach(c => {
+                const count = state.shops.filter(s => s.category === c && s.isOpen).length;
+                let icon = '🍔'; if(c.includes('ชานม') || c.includes('กาแฟ') || c.includes('น้ำ')) icon = '🧋'; if(c.includes('ก๋วยเตี๋ยว')) icon = '🍜';
+                html += `<div class="category-card" onclick="filterShops('${c}')"><span class="category-icon">${icon}</span><h3>${c}</h3><p style="font-size:11px; color:#888; margin-top:5px;">${count} ร้านเปิดอยู่</p></div>`;
+            });
+            document.getElementById('cat-grid').innerHTML = html;
+            renderShops(state.shops);
+        }
+
+        function filterShops(cat) { renderShops(state.shops.filter(s => s.category === cat)); document.getElementById('shop-grid').scrollIntoView({behavior: 'smooth'}); }
+        function searchMenu() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            const btn = document.getElementById('clear-search-btn');
+            if(!q) { btn.style.display = 'none'; renderShops(state.shops); return; }
+            btn.style.display = 'block';
+            const filteredShops = state.shops.filter(s => s.shopName.toLowerCase().includes(q) || s.category.toLowerCase().includes(q));
+            renderShops(filteredShops);
+        }
+        function clearSearch() { document.getElementById('search-input').value = ''; searchMenu(); }
+
+        function renderShops(shopList) {
+            let html = '';
+            shopList.forEach(s => {
+                const badge = s.isOpen ? '<span class="badge badge-green" style="position:absolute; top:5px; right:5px;">เปิด</span>' : '<span class="badge badge-red" style="position:absolute; top:5px; right:5px;">ปิด</span>';
+                const opacity = s.isOpen ? '1' : '0.5';
+                const img = s.imageUrl || 'https://via.placeholder.com/150?text=Shop';
+                const onClickStr = s.isOpen ? `openShop('${s.shopId}')` : `Swal.fire('ร้านปิด','ร้าน ${s.shopName} ปิดให้บริการขณะนี้','info')`;
+                html += `<div class="card" style="position:relative; opacity:${opacity}" onclick="${onClickStr}">${badge}<img src="${img}"><h3>${s.shopName}</h3><p>${s.category}</p></div>`;
+            });
+            if(html === '') html = '<p style="grid-column: span 2; text-align:center; color:#888;">ไม่พบร้านค้า</p>';
+            document.getElementById('shop-grid').innerHTML = html;
+        }
+
+        function shareShop() {
+            const cleanUrl = "https://8rai-marketplace.github.io/home/"; 
+            const shareText = "แนะนำ\n8 Rai Marketplace\nตลาดนัดออนไลน์ ท่าอิฐ-ไทรม้า\nสั่งของกินราคาหน้าร้าน ส่งตรงถึงบ้าน!\n" + cleanUrl;
+            try {
+                if (typeof liff !== 'undefined' && liff.isInClient() && liff.isApiAvailable('shareTargetPicker')) {
+                    const flex = { type: "flex", altText: "แนะนำ 8 Rai Marketplace ส่งตรงถึงหน้าบ้าน!", contents: { type: "bubble", size: "mega", body: { type: "box", layout: "vertical", paddingAll: "5px", backgroundColor: "#1e3c72", contents: [ { type: "box", layout: "vertical", backgroundColor: "#ffffff", paddingAll: "xl", cornerRadius: "md", contents: [ { type: "text", text: "📣 ของอร่อยเพียบ ต้องบอกต่อ!", weight: "bold", size: "sm", color: "#ff9900", align: "center", margin: "sm" }, { type: "text", text: "🛒 8 Rai Marketplace", weight: "bold", size: "xl", color: "#1e3c72", align: "center" }, { type: "separator", margin: "md", color: "#e9ecef" }, { type: "text", text: "รวมร้านเด็ดย่านท่าอิฐ-ไทรม้า\nราคาหน้าร้าน 100% ไม่บวกเพิ่ม!", size: "sm", margin: "lg", wrap: true, align: "center", color: "#555555" }, { type: "text", text: "✨ ส่งไวโดยพี่วินในพื้นที่", size: "md", color: "#28a745", weight: "bold", margin: "md", wrap: true, align: "center" }, { type: "box", layout: "vertical", margin: "xl", spacing: "md", contents: [ { type: "button", style: "primary", color: "#1e3c72", action: { type: "uri", label: "กดเพื่อเข้าตลาด", uri: cleanUrl } } ] } ] } ] } } };
+                    liff.shareTargetPicker([flex]).then(function(res) { if (res) Swal.fire({ title: 'ส่งการ์ดแนะนำตลาด สำเร็จ', icon: 'success' }); }).catch(function(error) { fallbackShare(shareText); });
+                } else { fallbackShare(shareText); }
+            } catch (err) { fallbackShare(shareText); }
+        }
+        function fallbackShare(shareText) {
+            if (navigator.share) { navigator.share({ title: '8 Rai Marketplace', text: shareText }).catch(err => {});
+            } else { const dummy = document.createElement('textarea'); document.body.appendChild(dummy); dummy.value = shareText; dummy.select(); document.execCommand('copy'); document.body.removeChild(dummy); Swal.fire('คัดลอกลิงก์สำเร็จ', 'นำไปวางส่งให้เพื่อนในแชทได้เลยค่ะ', 'success'); }
+        }
+
+        function openShop(shopId) {
+            const shop = state.shops.find(s => s.shopId === shopId);
+            if(!shop) return;
+            document.getElementById('shop-header').innerHTML = `<img src="${shop.imageUrl || 'https://via.placeholder.com/150'}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;"><div><h3 style="margin:0; color:#1e3c72;">${shop.shopName}</h3><p style="margin:0; font-size:0.85em; color:#666;">${shop.category}</p></div>`;
+            const shopMenus = state.menus.filter(m => m.shopId === shopId);
+            let html = '';
+            shopMenus.forEach(m => {
+                const img = m.imageUrl || 'https://via.placeholder.com/150';
+                let btn = m.isAvailable ? `<button class="btn btn-outline btn-sm" onclick="promptOptions('${m.menuId}', '${shopId}')">+ เพิ่ม (${m.price}฿)</button>` : `<span style="color:#dc3545; font-size:0.8em; font-weight:bold;">หมดชั่วคราว</span>`;
+                html += `<div class="list-item"><img src="${img}"><div class="list-info"><h4>${m.name}</h4><span class="price">${m.price} ฿</span></div><div>${btn}</div></div>`;
+            });
+            document.getElementById('menu-list').innerHTML = html;
+            showStep('menu');
+        }
+
+        // ⭐️ ระบบเลือกตัวเลือกเสริม (Options) ก่อนหยิบลงตะกร้า
+        function promptOptions(menuId, shopId) {
+            if (state.cartShopId && state.cartShopId !== shopId) {
+                return Swal.fire({ title: 'ขออภัยค่ะ', text: 'ระบบรองรับการสั่งทีละ 1 ร้านค้านะคะ กรุณาล้างตะกร้าก่อนค่ะ', icon: 'warning', showCancelButton: true, confirmButtonText: 'ล้างตะกร้าใหม่' }).then((r) => {
+                    if(r.isConfirmed) { state.cart = []; state.cartShopId = shopId; promptOptions(menuId, shopId); }
+                });
+            }
+            state.cartShopId = shopId;
+            const menu = state.menus.find(m => m.menuId === menuId);
+            
+            // ถ้าไม่มี option ให้ข้ามไป Add เลย
+            if(!menu.options || menu.options.length === 0) {
+                return proceedAdd(menu, []);
+            }
+
+            let htmlForm = '<div style="text-align:left; font-size:14px; margin-top:10px;">';
+            menu.options.forEach((opt, idx) => {
+                htmlForm += `<b style="color:#1e3c72;">${opt.name}</b><br>`;
+                opt.choices.forEach(choice => {
+                    htmlForm += `<label class="option-checkbox-label"><input type="checkbox" class="swal-opt-cb" value="${choice.name}" data-price="${choice.price}"> ${choice.name} ${choice.price > 0 ? '(+'+choice.price+'฿)' : ''}</label>`;
+                });
+                htmlForm += '<br>';
+            });
+            htmlForm += '</div>';
+
+            Swal.fire({
+                title: menu.name, html: htmlForm, showCancelButton: true, confirmButtonText: 'ใส่ตะกร้า', cancelButtonText: 'ยกเลิก',
+                preConfirm: () => {
+                    const selected = [];
+                    document.querySelectorAll('.swal-opt-cb:checked').forEach(cb => {
+                        selected.push({ name: cb.value, price: parseFloat(cb.getAttribute('data-price')) });
+                    });
+                    return selected;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) { proceedAdd(menu, result.value); }
+            });
+        }
+
+        function proceedAdd(menu, selectedOptions) {
+            let addPrice = selectedOptions.reduce((sum, opt) => sum + opt.price, 0);
+            let finalPrice = menu.price + addPrice;
+            
+            // Check if exact same item (with same options) exists
+            let existIdx = state.cart.findIndex(i => {
+                if(i.menuId !== menu.menuId) return false;
+                let optStr1 = i.selectedOptions.map(o=>o.name).sort().join(',');
+                let optStr2 = selectedOptions.map(o=>o.name).sort().join(',');
+                return optStr1 === optStr2;
+            });
+
+            if(existIdx > -1) {
+                state.cart[existIdx].quantity++;
+            } else {
+                state.cart.push({ 
+                    menuId: menu.menuId, name: menu.name, 
+                    price: finalPrice, quantity: 1, 
+                    selectedOptions: selectedOptions.map(o=>o.name) 
+                });
+            }
+            updateCartBadge(); saveCart();
+            Swal.fire({toast:true, position:'top-end', icon:'success', title:'เพิ่มลงตะกร้าแล้ว', showConfirmButton:false, timer:1500});
+        }
+
+        function updateCartBadge() {
+            const cnt = state.cart.reduce((a,b)=>a+b.quantity, 0);
+            document.getElementById('cart-badge').innerText = cnt;
+            const el = document.getElementById('float-cart');
+            if(cnt > 0) el.classList.remove('empty'); else el.classList.add('empty');
+        }
+        function saveCart() { localStorage.setItem('8rai_cart', JSON.stringify(state.cart)); localStorage.setItem('8rai_cart_shop', state.cartShopId); }
+        function clearCart() { state.cart = []; state.cartShopId = null; updateCartBadge(); saveCart(); }
+
+        function showCartSummary() {
+            if(state.cart.length === 0) return Swal.fire('ตะกร้าว่าง', 'เลือกเมนูอร่อยๆ ก่อนนะคะ', 'info');
+            const shop = state.shops.find(s => s.shopId === state.cartShopId);
+            document.getElementById('cart-shop-name').innerText = "ร้าน : " + (shop ? shop.shopName : 'ไม่ระบุ');
+            
+            let html = ''; let total = 0;
+            state.cart.forEach((item, idx) => {
+                total += item.price * item.quantity;
+                let optHtml = item.selectedOptions && item.selectedOptions.length > 0 ? `<div style="font-size:0.8em; color:#666;">- ${item.selectedOptions.join(', ')}</div>` : '';
+                html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px dashed #eee;">
+                    <div style="flex:1; padding-right:10px;">
+                        <b style="font-size:1em; color:#333;">${item.name}</b>
+                        ${optHtml}
+                        <div style="color:#d32f2f; font-weight:bold; margin-top:4px;">${item.price*item.quantity} ฿</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button class="qty-btn minus" onclick="changeQty(${idx}, -1)">-</button>
+                        <span style="font-weight:bold; font-size:1.1em; width:20px; text-align:center;">${item.quantity}</span>
+                        <button class="qty-btn plus" onclick="changeQty(${idx}, 1)">+</button>
+                        <button class="qty-btn del" onclick="changeQty(${idx}, -99)">🗑️</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('cart-items').innerHTML = html;
+            document.getElementById('cart-total').innerText = total;
+            showStep('cart');
+        }
+
+        function changeQty(idx, amt) {
+            state.cart[idx].quantity += amt;
+            if(state.cart[idx].quantity <= 0) state.cart.splice(idx, 1);
+            if(state.cart.length === 0) { clearCart(); goHome(); } else { updateCartBadge(); saveCart(); showCartSummary(); }
+        }
+
+        function proceedToCheckout() {
+            if(!state.cart.length) return;
+            document.getElementById('custAddress').value = ""; 
+            showStep('delivery');
+        }
+
+        function initMap() {
+            if(state.map) { state.map.invalidateSize(); return; }
+            try {
+                state.map = L.map('map').setView(state.shopLocation, 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(state.map);
+                state.marker = L.marker(state.shopLocation, {draggable: true}).addTo(state.map);
+                state.map.on('click', e => state.marker.setLatLng(e.latlng));
+            } catch(e) {}
+        }
+        function getLocation() {
+            showLoader('ค้นหาพิกัด...');
+            navigator.geolocation.getCurrentPosition(
+                p => { const ll = [p.coords.latitude, p.coords.longitude]; state.marker.setLatLng(ll); state.map.setView(ll, 15); hideLoader(); },
+                e => { hideLoader(); Swal.fire('Error', 'ไม่สามารถดึงตำแหน่งได้', 'error'); }, {enableHighAccuracy: true, timeout: 10000}
+            );
+        }
+        function toggleMap() {
+            const isDel = document.getElementById('delTypeDel').checked;
+            document.getElementById('map-section').style.display = isDel ? 'block' : 'none';
+            document.getElementById('custAddress').style.display = isDel ? 'block' : 'none';
+            if(isDel && state.map) setTimeout(()=>state.map.invalidateSize(), 100);
+        }
+
+        function calculateDistance(lat, lng) {
+            const R = 6371; const dLat = (lat - state.shopLocation[0]) * Math.PI / 180; const dLng = (lng - state.shopLocation[1]) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(state.shopLocation[0] * Math.PI / 180) * Math.cos(lat * Math.PI / 180) * Math.sin(dLng/2) * Math.sin(dLng/2);
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+        }
+        function calculateDeliveryFee(distance, subtotal) {
+            const distM = distance * 1000;
+            if (distM <= 500) return 20; return 20 + Math.ceil((distM - 500) * 0.019);
+        }
+        function generatePromptPayPayload(promptPayId, amount) {
+            let target = promptPayId.replace(/[^0-9]/g, ''); if (target.length >= 15) target = "0016" + target; else if (target.length >= 13) target = "0213" + target; else if (target.length >= 10) target = "01130066" + target.substring(1); else return "";
+            let payload = "00020101021129370016A000000677010111" + target + "5802TH5303764"; if (amount > 0) { let amountStr = amount.toFixed(2); payload += "54" + ("00" + amountStr.length).slice(-2) + amountStr; } payload += "6304";
+            let crc = 0xFFFF; for(let i=0; i<payload.length; i++) { crc ^= payload.charCodeAt(i) << 8; for(let j=0; j<8; j++) { if((crc & 0x8000) > 0) crc = ((crc << 1) ^ 0x1021) & 0xFFFF; else crc = (crc << 1) & 0xFFFF; } }
+            return payload + ("0000" + crc.toString(16)).slice(-4).toUpperCase();
+        }
+
+        function calculateSummary() {
+            const n = document.getElementById('custName').value.trim(); const p = document.getElementById('custPhone').value.trim(); const a = document.getElementById('custAddress').value.trim();
+            const isDel = document.getElementById('delTypeDel').checked;
+            if(!n || !p) return Swal.fire('ข้อมูลไม่ครบ', 'ใส่ชื่อและเบอร์โทรด้วยค่ะ', 'warning');
+            if(isDel && !a) return Swal.fire('ข้อมูลไม่ครบ', 'ระบุที่อยู่จัดส่งด้วยค่ะ', 'warning');
+            localStorage.setItem('8rai_phone', p); 
+
+            let dist = 0; let fee = 0; let food = state.cart.reduce((s,i)=>s+(i.price*i.quantity),0);
+            if(isDel) {
+                dist = calculateDistance(state.marker.getLatLng().lat, state.marker.getLatLng().lng);
+                if(dist > 4.5) return Swal.fire('ไกลเกินไป', 'ขออภัยค่ะ ระยะจัดส่งเกิน 4.5 กม.', 'error');
+                fee = calculateDeliveryFee(dist, food);
+            }
+
+            let html = '';
+            state.cart.forEach(i => {
+                let opt = i.selectedOptions && i.selectedOptions.length > 0 ? `<br><small style="color:#666;">(${i.selectedOptions.join(', ')})</small>` : '';
+                html += `<div style="display:flex;justify-content:space-between; font-size:0.9em; border-bottom:1px dashed #eee; padding:8px 0;"><span>${i.name} ${opt} <br><span style="color:#ff4444;">x${i.quantity}</span></span><b>${i.price*i.quantity}฿</b></div>`;
+            });
+            document.getElementById('sum-food').innerText = food + ' ฿'; document.getElementById('sum-dist').innerText = isDel ? `(${dist.toFixed(1)}กม.)` : '(หน้าร้าน)'; document.getElementById('sum-del').innerText = fee + ' ฿'; document.getElementById('sum-total').innerText = (food+fee) + ' ฿';
+            
+            const shop = state.shops.find(s => s.shopId === state.cartShopId);
+            document.getElementById('shop-promptpay-display').innerText = "พร้อมเพย์ร้าน: " + (shop.promptpay || 'ไม่ระบุ');
+            
+            let pp = shop.promptpay ? shop.promptpay.replace(/[^0-9]/g, '') : "0000000000";
+            let pl = generatePromptPayPayload(pp, food+fee);
+            document.getElementById('qr-img').src = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(pl) + "&size=300x300";
+
+            showStep('pay');
+        }
+
+        function toggleSlip() {
+            const isCash = document.getElementById('payCash').checked;
+            document.getElementById('qr-section').style.display = isCash ? 'none' : 'block';
+            if(isCash) { state.slipBase64 = null; document.getElementById('slip-preview').style.display='none'; document.getElementById('slip-file').value=''; }
+        }
+
+        function previewSlip(input) {
+            if(input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = new Image(); img.onload = () => {
+                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let w = img.width; let h = img.height; const MAX = 800;
+                        if(w>h) { if(w>MAX) {h*=MAX/w; w=MAX;} } else { if(h>MAX) {w*=MAX/h; h=MAX;} }
+                        canvas.width = w; canvas.height = h; ctx.drawImage(img,0,0,w,h);
+                        state.slipBase64 = canvas.toDataURL('image/jpeg', 0.7); document.getElementById('slip-preview').src = state.slipBase64; document.getElementById('slip-preview').style.display = 'block';
+                    }; img.src = e.target.result;
+                }; reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function submitOrder() {
+            const isCash = document.getElementById('payCash').checked;
+            if(!isCash && !state.slipBase64) return Swal.fire('ข้อมูลไม่ครบ', 'กรุณาแนบสลิปโอนเงินค่ะ', 'warning');
+            const isDel = document.getElementById('delTypeDel').checked;
+            let food = state.cart.reduce((s,i)=>s+(i.price*i.quantity),0); let dist = isDel ? calculateDistance(state.marker.getLatLng().lat, state.marker.getLatLng().lng) : 0; let fee = isDel ? calculateDeliveryFee(dist, food) : 0;
+            
+            const payload = {
+                shopId: state.cartShopId, uid: state.uid, lineDisplayName: state.name, customerName: document.getElementById('custName').value.trim(), phone: document.getElementById('custPhone').value.trim(), address: isDel ? document.getElementById('custAddress').value.trim() : 'รับหน้าร้าน', lat: isDel ? state.marker.getLatLng().lat : 0, lng: isDel ? state.marker.getLatLng().lng : 0, items: state.cart, totalFood: food, deliveryFee: fee, totalAmount: food+fee, distance: dist, additionalNotes: document.getElementById('custNote').value, paymentMethod: isCash ? 'เงินสด' : 'โอนเงิน', slip: state.slipBase64
+            };
+            showLoader('ส่งคำสั่งซื้อเข้าร้าน...');
+            const res = await api({ action: 'submitOrder', data: payload }); hideLoader();
+            if(res && res.success) { Swal.fire({title:'สำเร็จ!', text:`ส่งออร์เดอร์ให้ร้านแล้วค่ะ\nหมายเลข: ${res.orderNumber}`, icon:'success'}).then(()=>{ clearCart(); fetchCustomerOrders(); }); }
+        }
+
+        async function fetchCustomerOrders() {
+            showLoader(); const res = await api({ action: 'getTodayOrders' }); hideLoader();
+            const list = document.getElementById('cust-order-list'); list.innerHTML = '';
+            if(res && res.orders && res.orders.length > 0) {
+                const myOrders = res.orders.filter(o => o.uid === state.uid && o.status !== 'จัดส่งสำเร็จ' && o.status !== 'ยกเลิก');
+                if(myOrders.length === 0) { list.innerHTML = '<p style="text-align:center;">ไม่มีออร์เดอร์ที่กำลังดำเนินการ</p>'; }
+                myOrders.forEach(o => {
+                    const shop = state.shops.find(s => s.shopId === o.shopId);
+                    list.innerHTML += `<div class="order-item" style="border-left: 4px solid #1e3c72; background:#fff; padding:15px; border-radius:10px; margin-bottom:10px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><b>${o.orderNumber.slice(-6)}</b><span class="badge badge-green">${o.status}</span></div>
+                        <p style="margin:5px 0; font-size:0.9em; color:#666;">ร้าน: ${shop ? shop.shopName : o.shopId}</p>
+                        <p style="margin:5px 0; font-size:0.9em;">ยอด: <strong style="color:#d32f2f;">${o.totalAmount} ฿</strong> (${o.paymentMethod})</p>
+                    </div>`;
+                });
+            } else { list.innerHTML = '<p style="text-align:center;">ไม่มีออร์เดอร์</p>'; }
+            showStep('status');
+        }
+
+        // ==========================================
+        // 🏬 SHOP ADMIN Logic (ระบบจัดการร้านค้าเต็มรูปแบบ)
+        // ==========================================
+        async function loadShopAdminData(silent = false) {
+            if(!silent) showLoader('โหลดข้อมูลร้าน...');
+            const res = await api({ action: 'getShopOrders', shopId: state.shopId });
+            if(!silent) hideLoader();
+            
+            const myShop = state.shops.find(s => s.shopId === state.shopId);
+            if(myShop) {
+                document.getElementById('admin-shop-name').innerText = myShop.shopName;
+                document.getElementById('admin-shop-cat').innerText = myShop.category;
+                document.getElementById('admin-shop-pp').innerText = `PromptPay: ${myShop.promptpay}`;
+                document.getElementById('admin-shop-img').src = myShop.imageUrl || 'https://via.placeholder.com/150';
+                document.getElementById('admin-shop-open').checked = myShop.isOpen;
+            }
+
+            if(res && res.stats) {
+                document.getElementById('admin-stat-sales').innerText = res.stats.sales || 0;
+                document.getElementById('admin-stat-count').innerText = res.stats.count || 0;
+            }
+
+            if(!silent) renderAdminMenuList();
+
+            const oList = document.getElementById('admin-orders-list'); oList.innerHTML = '';
+            if(res && res.orders && res.orders.length > 0) {
+                res.orders.forEach(o => {
+                    let actionHtml = '';
+                    if(o.status !== 'จัดส่งสำเร็จ' && o.status !== 'ยกเลิก') {
+                        if(o.address === 'รับหน้าร้าน') {
+                            actionHtml = '<div style="margin-top:10px; background:#eef2f7; padding:8px; border-radius:8px; text-align:center; color:#1e3c72; font-size:0.9em; font-weight:bold;">ลูกค้ารับหน้าร้าน</div>';
+                        } else {
+                            if(!o.riderUid) {
+                                actionHtml = `<div style="display:flex; gap:5px; margin-top:10px;">
+                                    <button class="btn btn-outline btn-sm" style="flex:1;" onclick="callRider('${o.orderNumber}', 'SHOP_DELIVERY')">🏠 ร้านส่งเอง</button>
+                                    <button class="btn btn-primary btn-sm" style="flex:2;" onclick="callRider('${o.orderNumber}', '${state.shopId}')">🛵 เรียกไรเดอร์ (สลับคิว)</button>
+                                </div>`;
+                            } else {
+                                let statRider = o.riderAccepted ? '<span style="color:#28a745;">(รับงานแล้ว)</span>' : '<span style="color:#ff9800;">(รอรับงาน..)</span>';
+                                let changeRiderBtn = !o.riderAccepted ? `<button class="btn btn-danger btn-sm" style="float:right; padding:2px 5px;" onclick="callRider('${o.orderNumber}', '${state.shopId}')">🔄 เปลี่ยนคน</button><div style="clear:both;"></div>` : '';
+                                actionHtml = `<div style="margin-top:10px; background:#f8f9fa; padding:8px; border-radius:8px; font-size:0.85em; border:1px dashed #ccc;"><b>ผู้ส่ง:</b> ${o.riderName} ${statRider} ${changeRiderBtn}</div>`;
+                            }
+                        }
+                        actionHtml += `<div style="margin-top:10px; display:flex; gap:5px;">
+                            <button class="btn btn-sm" style="background:#17a2b8; color:white; flex:1;" onclick="changeStatus('${o.orderNumber}', 'กำลังทำเครื่องดื่ม')">🍳 กำลังทำ</button>
+                            <button class="btn btn-sm" style="background:#28a745; color:white; flex:1;" onclick="changeStatus('${o.orderNumber}', 'จัดส่งสำเร็จ')">✅ สำเร็จ</button>
+                            <button class="btn btn-sm btn-danger" onclick="changeStatus('${o.orderNumber}', 'ยกเลิก')">❌</button>
+                        </div>`;
+                    }
+                    
+                    let slipBtn = o.slipUrl ? `<a href="${o.slipUrl}" target="_blank" style="font-size:0.8em; color:#1e3c72; float:right;">ดูสลิป</a>` : '';
+                    let notesHtml = o.notes ? `<p style="margin:4px 0; font-size:0.8em; color:#e65100; background:#fffde7; padding:4px;">โน้ต: ${o.notes}</p>` : '';
+                    oList.innerHTML += `<div class="order-item" style="border-left: 4px solid #ff9800; background:#fff; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #eee;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><b>#${o.orderNumber.slice(-6)}</b><span class="badge badge-green">${o.status}</span></div>
+                        <p style="margin:2px 0; font-size:0.9em;"><b>ลูกค้า:</b> ${o.customerName} (<a href="tel:${o.phone}">${o.phone}</a>)</p>
+                        <div style="background:#f8f9fa; padding:8px; margin:5px 0; font-size:0.9em; border-radius:8px; white-space:pre-wrap;">${o.itemsStr}</div>
+                        <p style="margin:2px 0; font-size:0.9em;"><b>ยอดอาหาร:</b> <span style="color:#d32f2f; font-weight:bold;">${o.totalFood} ฿</span> ${slipBtn}</p>
+                        ${notesHtml}${actionHtml}
+                    </div>`;
+                });
+            } else { oList.innerHTML = '<p style="text-align:center; color:#888;">ไม่มีออร์เดอร์</p>'; }
+        }
+        function loadShopAdminDataSilent() { loadShopAdminData(true); }
+
+        async function toggleShopOpen() {
+            const isOpen = document.getElementById('admin-shop-open').checked;
+            showLoader(); await api({ action: 'updateShopStatus', shopId: state.shopId, isOpen: isOpen, promptPay: null }); hideLoader();
+        }
+
+        // ⭐️ แก้ไขข้อมูลร้านค้า (Profile)
+        function editShopProfile() {
+            const myShop = state.shops.find(s => s.shopId === state.shopId);
+            state.tempCoverBase64 = null;
+            Swal.fire({
+                title: 'แก้ไขข้อมูลร้าน',
+                html: `
+                    <div style="text-align:left; font-size:14px;">
+                        <label>ชื่อร้าน:</label> <input id="swal-sname" type="text" value="${myShop.shopName}">
+                        <label>หมวดหมู่ (เช่น ชานม, ก๋วยเตี๋ยว):</label> <input id="swal-scat" type="text" value="${myShop.category}">
+                        <label>เบอร์ PromptPay:</label> <input id="swal-spp" type="text" value="${myShop.promptpay}">
+                        <label>เปลี่ยนรูปปก (ถ้าต้องการ):</label><br>
+                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('shop-cover-upload').click()">อัปโหลดรูป</button>
+                        <span id="swal-scover-status" style="color:#28a745; font-size:12px; margin-left:10px;"></span>
+                    </div>`,
+                showCancelButton: true, confirmButtonText: 'บันทึก',
+                preConfirm: () => { return { shopName: document.getElementById('swal-sname').value, category: document.getElementById('swal-scat').value, promptPay: document.getElementById('swal-spp').value, imageBase64: state.tempCoverBase64 }; }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    showLoader('บันทึกข้อมูล...');
+                    const res = await api({ action: 'updateShopProfile', shopId: state.shopId, profileData: result.value });
+                    if(res.success) { Swal.fire('สำเร็จ', 'บันทึกข้อมูลแล้ว', 'success').then(()=>window.location.reload()); }
+                }
+            });
+        }
+        function handleShopCoverChange(input) {
+            if(input.files && input.files[0]) {
+                const reader = new FileReader(); reader.onload = e => {
+                    const img = new Image(); img.onload = () => {
+                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let w = img.width; let h = img.height; const MAX = 600;
+                        if(w>h) { if(w>MAX) {h*=MAX/w; w=MAX;} } else { if(h>MAX) {w*=MAX/h; h=MAX;} }
+                        canvas.width = w; canvas.height = h; ctx.drawImage(img,0,0,w,h);
+                        state.tempCoverBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                        document.getElementById('swal-scover-status').innerText = '✅ อัปโหลดแล้ว';
+                    }; img.src = e.target.result;
+                }; reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // ⭐️ จัดการเมนู & ตัวเลือกเสริม
+        function renderAdminMenuList() {
+            const myMenus = state.menus.filter(m => m.shopId === state.shopId);
+            let mHtml = '';
+            myMenus.forEach(m => {
+                let checkedState = m.isAvailable ? 'checked' : '';
+                mHtml += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9em;">
+                    <div style="flex:1;">
+                        <b style="color:#1e3c72;">${m.name}</b> <span style="color:#d32f2f;">(${m.price}฿)</span>
+                        <div style="font-size:0.8em; color:#888;">${m.options && m.options.length ? 'มีตัวเลือกเสริม' : 'ไม่มีตัวเลือกเสริม'}</div>
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button class="btn btn-outline btn-sm" style="padding:2px 8px;" onclick='openMenuModal(${JSON.stringify(m)})'>✏️</button>
+                        <label class="switch"><input type="checkbox" ${checkedState} onchange="toggleMenu('${m.menuId}', this.checked)"><span class="slider"></span></label>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('admin-menu-list').innerHTML = mHtml;
+        }
+
+        function openMenuModal(menuObj) {
+            let isNew = !menuObj;
+            let mId = isNew ? '' : menuObj.menuId;
+            let mName = isNew ? '' : menuObj.name;
+            let mPrice = isNew ? '' : menuObj.price;
+            let mCat = isNew ? state.shops.find(s=>s.shopId===state.shopId).category : menuObj.category;
+            let optsStr = isNew || !menuObj.options ? '' : menuObj.options.map(o => o.name + ":" + o.choices.map(c => c.name + (c.price>0?'+'+c.price:'')).join(',')).join('\n');
+            
+            state.tempCoverBase64 = null;
+
+            Swal.fire({
+                title: isNew ? 'เพิ่มเมนูใหม่' : 'แก้ไขเมนู',
+                html: `
+                    <div style="text-align:left; font-size:14px; max-height: 400px; overflow-y:auto; padding-right:10px;">
+                        <label>ชื่อเมนู:</label> <input id="m-name" type="text" value="${mName}" placeholder="เช่น ข้าวผัดกะเพรา">
+                        <label>ราคา (บาท):</label> <input id="m-price" type="number" value="${mPrice}">
+                        <label>หมวดหมู่:</label> <input id="m-cat" type="text" value="${mCat}">
+                        <label>รูปภาพ (ถ้ามี):</label><br>
+                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('shop-cover-upload').click()">อัปโหลดรูป</button>
+                        <span id="swal-scover-status" style="color:#28a745; font-size:12px; margin-left:10px;"></span>
+                        
+                        <div style="background:#fff8e1; border:1px dashed #ffc107; padding:10px; border-radius:8px; margin-top:15px;">
+                            <label style="color:#d32f2f; font-weight:bold;">ตัวเลือกเสริม (พิมพ์ตามรูปแบบ)</label><br>
+                            <span style="font-size:11px; color:#666;">รูปแบบ: <b>ชื่อกลุ่ม:ตัวเลือก1,ตัวเลือก2+ราคา</b><br>เช่น <br>ความเผ็ด:เผ็ดน้อย,เผ็ดกลาง,เผ็ดมาก<br>ท็อปปิ้ง:ไข่ดาว+10,ไข่เจียว+10</span>
+                            <textarea id="m-opts" rows="4" style="font-size:12px;">${optsStr}</textarea>
+                        </div>
+                    </div>`,
+                showCancelButton: true, confirmButtonText: 'บันทึก',
+                preConfirm: () => {
+                    let optRaw = document.getElementById('m-opts').value.trim();
+                    let optionsParsed = [];
+                    if(optRaw) {
+                        optRaw.split('\n').forEach(line => {
+                            if(line.includes(':')) {
+                                let parts = line.split(':');
+                                let groupName = parts[0].trim();
+                                let choicesRaw = parts[1].split(',');
+                                let choices = choicesRaw.map(c => {
+                                    let cParts = c.split('+');
+                                    return { name: cParts[0].trim(), price: cParts.length>1 ? parseFloat(cParts[1]) : 0 };
+                                });
+                                optionsParsed.push({ name: groupName, choices: choices });
+                            }
+                        });
+                    }
+                    return {
+                        menuId: mId, name: document.getElementById('m-name').value, price: parseFloat(document.getElementById('m-price').value),
+                        category: document.getElementById('m-cat').value, imageBase64: state.tempCoverBase64, options: optionsParsed
+                    };
+                }
+            }).then(async (res) => {
+                if(res.isConfirmed) {
+                    if(!res.value.name || !res.value.price) return Swal.fire('Error', 'กรอกชื่อและราคาให้ครบ', 'error');
+                    showLoader('กำลังบันทึกเมนู...');
+                    const apiRes = await api({ action: 'addOrUpdateMenu', shopId: state.shopId, menuData: res.value });
+                    if(apiRes.success) { Swal.fire('สำเร็จ', 'บันทึกเมนูแล้ว', 'success').then(()=>window.location.reload()); }
+                }
+            });
+        }
+
+        async function toggleMenu(menuId, isAvail) { showLoader(); await api({ action: 'updateMenuStatus', menuId: menuId, isAvailable: isAvail }); hideLoader(); }
+        async function changeStatus(orderNum, stat) { showLoader(); await api({ action: 'updateOrderStatus', orderNumber: orderNum, newStatus: stat }); loadShopAdminData(); }
+        async function callRider(orderNum, sId) {
+            showLoader('หาไรเดอร์...'); const res = await api({ action: 'assignRiderRoundRobin', orderNumber: orderNum, shopId: sId }); hideLoader();
+            if(res.success) Swal.fire('สำเร็จ', `มอบหมายงานให้ ${res.riderName} แล้ว`, 'success'); else Swal.fire('ผิดพลาด', res.message || 'ไม่มีไรเดอร์รับงาน', 'error');
+            loadShopAdminData();
+        }
+
+        // ==========================================
+        // 🛵 RIDER Logic
+        // ==========================================
+        async function loadRiderJobs(silent = false) {
+            if(!silent) showLoader(); const res = await api({ action: 'getRiderJobs' }); if(!silent) hideLoader();
+            document.getElementById('rider-online-toggle').checked = state.isOnline;
+            document.getElementById('rider-status-text').innerText = state.isOnline ? 'ออนไลน์ 🟢' : 'ออฟไลน์ 🔴';
+            document.getElementById('rider-status-text').style.color = state.isOnline ? '#28a745' : '#dc3545';
+            if(res && res.stats) { document.getElementById('rider-stat-income').innerText = res.stats.income || 0; document.getElementById('rider-stat-count').innerText = res.stats.count || 0; }
+            const list = document.getElementById('rider-jobs-list'); list.innerHTML = '';
+            if(res && res.jobs && res.jobs.length > 0) {
+                res.jobs.forEach(j => {
+                    const shop = state.shops.find(s => s.shopId === j.shopId);
+                    let acts = '';
+                    if(!j.riderAccepted) {
+                        acts = `<div style="display:flex; gap:5px; margin-top:10px;"><button class="btn btn-success btn-sm" style="flex:2;" onclick="riderAction('acceptAssignedOrder', '${j.orderNumber}')">✅ ยืนยันรับงาน</button><button class="btn btn-outline btn-sm btn-danger" style="flex:1;" onclick="riderAction('rejectAssignedOrder', '${j.orderNumber}')">ปฏิเสธ</button></div>`;
+                    } else if (j.status !== 'อยู่ระหว่างจัดส่ง') {
+                        acts = `<div style="display:flex; gap:5px; margin-top:10px;"><button class="btn btn-primary btn-sm" style="flex:2; background:#ff9800;" onclick="takePhoto('${j.orderNumber}', 'pickup')">📸 ถ่ายรูปรับอาหาร</button><button class="btn btn-outline btn-sm" style="flex:1;" onclick="skipPhoto('${j.orderNumber}', 'pickup')">⏭️ ข้าม</button></div>`;
+                    } else {
+                        acts = `<div style="display:flex; gap:5px; margin-top:10px;"><button class="btn btn-success btn-sm" style="flex:2;" onclick="takePhoto('${j.orderNumber}', 'complete')">📸 ถ่ายรูปส่ง (ปิดงาน)</button><button class="btn btn-outline btn-sm" style="flex:1;" onclick="skipPhoto('${j.orderNumber}', 'complete')">⏭️ ปิดงานเลย</button></div>`;
+                    }
+                    let mapLinkHtml = j.mapLink ? `<a href="${j.mapLink}" target="_blank" class="btn btn-outline btn-sm" style="width:100%; margin-top:5px; text-decoration:none;">📍 นำทาง</a>` : '';
+                    let shopNameDisplay = shop ? shop.shopName : j.shopId;
+                    
+                    list.innerHTML += `<div class="order-item" style="border-left: 4px solid #1e3c72; background:#fff; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #eee;">
+                        <div style="display:flex; justify-content:space-between;"><b>#${j.orderNumber.slice(-6)}</b> <span style="color:#d32f2f; font-weight:bold;">ค่าส่ง: ${j.deliveryFee} ฿</span></div>
+                        <p style="margin:5px 0; font-size:0.9em; background:#eef2f7; padding:5px; border-radius:5px;"><b>รับที่:</b> ${shopNameDisplay}</p>
+                        <p style="margin:5px 0; font-size:0.9em;"><b>ส่งที่:</b> ${j.customerName} - ${j.address}</p>
+                        <p style="margin:5px 0; font-size:0.9em;"><b>โทร:</b> <a href="tel:${j.phone}">${j.phone}</a></p>
+                        ${mapLinkHtml}${acts}
+                    </div>`;
+                });
+            } else { list.innerHTML = '<p style="text-align:center; color:#888;">กำลังรองาน...</p>'; }
+        }
+        function loadRiderJobsSilent() { loadRiderJobs(true); }
+
+        async function toggleRiderOnline() { const st = document.getElementById('rider-online-toggle').checked; showLoader(); await api({ action: 'setRiderStatus', isOnline: st }); state.isOnline = st; hideLoader(); loadRiderJobs(); }
+        async function riderAction(act, num) { showLoader(); await api({ action: act, orderNumber: num }); loadRiderJobs(); }
+        function takePhoto(num, type) { const input = document.getElementById('photo-upload'); input.setAttribute('data-num', num); input.setAttribute('data-type', type); input.click(); }
+        function skipPhoto(num, type) { Swal.fire({title:'ข้ามการถ่ายรูป?', text:'ยืนยันอัปเดตสถานะเลยหรือไม่?', icon:'question', showCancelButton:true, confirmButtonText:'ยืนยัน'}).then(r => { if(r.isConfirmed) { showLoader(); api({ action: 'completeDelivery', orderNumber: num, imageBase64: "", type: type }).then(()=>loadRiderJobs()); } }); }
+        function handlePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const num = input.getAttribute('data-num'); const type = input.getAttribute('data-type');
+                const reader = new FileReader(); showLoader('อัปโหลดรูป...');
+                reader.onload = e => {
+                    const img = new Image(); img.onload = () => {
+                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let w = img.width; let h = img.height; const MAX = 800;
+                        if(w>h) { if(w>MAX) {h*=MAX/w; w=MAX;} } else { if(h>MAX) {w*=MAX/h; h=MAX;} }
+                        canvas.width = w; canvas.height = h; ctx.drawImage(img,0,0,w,h);
+                        api({ action: 'completeDelivery', orderNumber: num, imageBase64: canvas.toDataURL('image/jpeg', 0.8), type: type }).then(()=>loadRiderJobs()); input.value = '';
+                    }; img.src = e.target.result;
+                }; reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>
