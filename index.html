@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>8 Rai Marketplace 🔹Delivery🔹</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <style>
+        * { font-family: 'Prompt', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); min-height: 100vh; display: flex; flex-direction: column; color: #333; }
+        .header { background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 15px 10px; text-align: center; font-size: 1.2em; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 800px; margin: 0 auto; padding: 15px; flex: 1; width: 100%; }
+        .step { display: none; animation: fadeIn 0.4s ease; background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h2 { color: #1e3c72; margin-bottom: 15px; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center;}
+        
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #2a5298; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+        
+        .card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .card:hover { transform: translateY(-3px); border-color: #2a5298; box-shadow: 0 5px 15px rgba(42,82,152,0.15); }
+        .card img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #f8f9fa; }
+        .card h3 { font-size: 1em; color: #222; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card p { font-size: 0.8em; color: #777; }
+
+        .list-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eee; align-items: center; }
+        .list-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 10px; }
+        .list-info { flex: 1; }
+        .list-info h4 { margin: 0 0 4px 0; font-size: 1em; color: #333; }
+        .list-info p { margin: 0; font-size: 0.85em; color: #666; }
+        .price { color: #d32f2f; font-weight: bold; font-size: 1.1em; margin-top: 4px; display: block; }
+        
+        .btn { padding: 10px 15px; border-radius: 25px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; font-size: 0.9em; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-align: center; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; box-shadow: 0 4px 10px rgba(42,82,152,0.3); }
+        .btn-success { background: linear-gradient(135deg, #28a745, #20c997); color: white; box-shadow: 0 4px 10px rgba(40,167,69,0.3); }
+        .btn-danger { background: linear-gradient(135deg, #dc3545, #f86384); color: white; box-shadow: 0 4px 10px rgba(220,53,69,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #2a5298; color: #2a5298; }
+        .btn-sm { padding: 5px 12px; font-size: 0.8em; }
+
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; background: #fafafa; outline: none; transition: border 0.3s; }
+        input:focus, textarea:focus, select:focus { border-color: #2a5298; background: #fff; }
+        
+        .toggle-group { display: flex; gap: 8px; margin: 10px 0; }
+        .toggle-group input[type="radio"] { display: none; }
+        .toggle-group label { flex: 1; padding: 12px; background: #f8f9fa; border: 2px solid #eee; border-radius: 12px; text-align: center; cursor: pointer; font-weight: bold; color: #555; transition: 0.2s; }
+        .toggle-group input[type="radio"]:checked + label { background: #eef2f7; border-color: #2a5298; color: #2a5298; box-shadow: 0 4px 10px rgba(42,82,152,0.1); }
+        
+        .badge { background: #ff9800; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7em; font-weight: bold; }
+        .badge-red { background: #dc3545; }
+        .badge-green { background: #28a745; }
+
+        .float-cart { position: fixed; bottom: 30px; right: 20px; background: #28a745; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(40,167,69,0.4); cursor: pointer; z-index: 1000; font-size: 1.5em; transition: 0.3s;}
+        .float-cart.empty { background: #999; box-shadow: none; }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: #dc3545; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+
+        .stat-box { background: #f8f9fa; border-radius: 10px; padding: 15px; text-align: center; border: 1px solid #eee; flex: 1; }
+        .stat-val { font-size: 1.5em; font-weight: bold; color: #2a5298; }
+        .stat-label { font-size: 0.8em; color: #666; }
+
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; margin-left: 10px; vertical-align: middle; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 26px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #28a745; }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        #map { width: 100%; height: 200px; border-radius: 12px; margin-bottom: 10px; z-index: 1; }
+        .shop-banner { background: #eef2f7; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #dce4ec;}
+    </style>
+</head>
+<body>
+    <div id="loader-overlay" class="loader-overlay"><div class="spinner"></div><p id="loader-text">กำลังโหลดตลาดนัด...</p></div>
+    
+    <div class="header">
+        <span onclick="goHome()" style="cursor:pointer;">🛒 8 Rai Market</span>
+        <div style="font-size: 0.6em; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px;" id="user-role-badge">ลูกค้า</div>
+    </div>
+
+    <div class="container" id="main-container">
+        
+        <!-- STEP 1: Home Categories -->
+        <div class="step" id="step-home">
+            <div id="staff-dashboard-btn" style="display:none; margin-bottom: 15px;">
+                <button class="btn btn-primary" style="width: 100%; padding: 12px;" onclick="enterDashboard()">⚙️ เข้าสู่ระบบจัดการ (ร้านค้า/ไรเดอร์)</button>
+            </div>
+            
+            <div style="background: #fff8e1; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 0.85em; color: #856404; border: 1px dashed #ffeeba; text-align: center;">
+                🚨 <b>กติกาตลาด:</b> สั่งอาหาร 1 ร้านค้า ต่อ 1 ออร์เดอร์นะคะ (โอนเงินตรงเข้าร้านค้าเลยจ้า)
+            </div>
+
+            <h2>หมวดหมู่อาหาร</h2>
+            <div id="cat-grid" class="grid-3"></div>
+            
+            <h2 style="margin-top: 25px;">ร้านค้าทั้งหมด</h2>
+            <div id="shop-grid" class="grid-2"></div>
+        </div>
+
+        <!-- STEP 2: Shop Menu -->
+        <div class="step" id="step-menu">
+            <button class="btn btn-outline btn-sm" onclick="goHome()" style="margin-bottom: 15px;">← กลับตลาด</button>
+            <div id="shop-header" class="shop-banner"></div>
+            <h2>รายการเมนู</h2>
+            <div id="menu-list"></div>
+        </div>
+
+        <!-- STEP 3: Cart -->
+        <div class="step" id="step-cart">
+            <h2>🛒 ตะกร้าสินค้า</h2>
+            <div id="cart-shop-name" style="font-weight: bold; color: #2a5298; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;"></div>
+            <div id="cart-items"></div>
+            <div style="background: #fafafa; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: right; font-size: 1.2em; font-weight: bold;">
+                รวมค่าอาหาร: <span id="cart-total" style="color: #d32f2f;">0</span> ฿
+            </div>
+            <div class="grid-2">
+                <button class="btn btn-outline" onclick="showStep('menu')">เลือกซื้อเพิ่ม</button>
+                <button class="btn btn-primary" onclick="proceedToCheckout()">ยืนยันตะกร้า</button>
+            </div>
+        </div>
+
+        <!-- STEP 4: Checkout Delivery -->
+        <div class="step" id="step-delivery">
+            <h2>📍 ข้อมูลจัดส่ง</h2>
+            <div class="toggle-group">
+                <input type="radio" id="delTypeDel" name="delType" value="delivery" checked onchange="toggleMap()">
+                <label for="delTypeDel">🛵 ให้ไปส่ง</label>
+                <input type="radio" id="delTypePick" name="delType" value="pickup" onchange="toggleMap()">
+                <label for="delTypePick">🏠 รับหน้าร้าน</label>
+            </div>
+            
+            <div id="map-section">
+                <div id="map"></div>
+                <button class="btn btn-outline btn-sm" style="width: 100%; margin-bottom: 15px;" onclick="getLocation()">📍 กดแชร์ตำแหน่งปัจจุบัน</button>
+            </div>
+
+            <form id="form-checkout" onsubmit="return false;">
+                <input type="text" id="custName" placeholder="ชื่อคุณลูกค้า *" required>
+                <input type="tel" id="custPhone" placeholder="เบอร์โทรศัพท์ *" required>
+                <input type="text" id="custAddress" placeholder="หมู่บ้าน/บ้านเลขที่/ซอย *" required>
+                <textarea id="custNote" placeholder="ข้อความถึงร้านค้า (เพิ่มท็อปปิ้ง, ไม่เผ็ด, ฯลฯ)"></textarea>
+            </form>
+            
+            <div style="background: #eef2f7; padding: 12px; border-radius: 8px; font-size: 0.8em; color: #555; margin-bottom: 15px;">
+                <b>เงื่อนไขค่าส่ง (คำนวณทางอากาศ):</b><br>
+                - ระยะ 0 - 500 เมตร : 20 บาท<br>
+                - เกิน 500 เมตร : +0.019 บาท/เมตร<br>
+                <span style="color: #d32f2f;">* รัศมีให้บริการสูงสุด 4.5 กม.</span>
+            </div>
+
+            <div class="grid-2">
+                <button class="btn btn-outline" onclick="showStep('cart')">กลับ</button>
+                <button class="btn btn-primary" onclick="calculateSummary()">สรุปยอด</button>
+            </div>
+        </div>
+
+        <!-- STEP 5: Payment -->
+        <div class="step" id="step-pay">
+            <h2>💰 ชำระเงิน</h2>
+            <div style="background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>ค่าอาหาร:</span><b id="sum-food">0 ฿</b></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>ค่าจัดส่ง <small id="sum-dist" style="color:#888;"></small>:</span><b id="sum-del">0 ฿</b></div>
+                <hr style="border: 0; border-top: 1px dashed #eee; margin: 10px 0;">
+                <div style="display:flex; justify-content:space-between; font-size: 1.2em; color: #d32f2f;"><span>ยอดรวมทั้งสิ้น:</span><b id="sum-total">0 ฿</b></div>
+            </div>
+
+            <div class="toggle-group">
+                <input type="radio" id="payTransfer" name="payType" value="โอนเงิน" checked onchange="toggleSlip()">
+                <label for="payTransfer">📱 โอนเงิน (สแกน QR)</label>
+                <input type="radio" id="payCash" name="payType" value="เงินสด" onchange="toggleSlip()">
+                <label for="payCash">💵 จ่ายเงินสด</label>
+            </div>
+
+            <div id="qr-section" style="text-align: center; background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <p style="margin-bottom: 5px; font-weight: bold;">สแกนเพื่อโอนเงินเข้าร้าน</p>
+                <p id="shop-promptpay-display" style="color: #2a5298; margin-bottom: 10px;"></p>
+                <img id="qr-img" src="" style="width: 200px; height: 200px; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <div style="margin-top: 15px;">
+                    <label style="color: #d32f2f; font-weight: bold; display: block; margin-bottom: 5px;">👇 แนบสลิปโอนเงิน *</label>
+                    <input type="file" id="slip-file" accept="image/*" onchange="previewSlip(this)" style="background: white;">
+                    <img id="slip-preview" style="display: none; max-width: 100%; height: 150px; object-fit: contain; margin: 10px auto; border-radius: 8px;">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <button class="btn btn-outline" onclick="showStep('delivery')">ย้อนกลับ</button>
+                <button class="btn btn-success" onclick="submitOrder()">✅ ยืนยันคำสั่งซื้อ</button>
+            </div>
+        </div>
+
+        <!-- STEP 6: Customer Order Status -->
+        <div class="step" id="step-status">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin:0; border:none; padding:0;">สถานะออร์เดอร์</h2>
+                <button class="btn btn-outline btn-sm" onclick="fetchCustomerOrders()">🔄 อัปเดต</button>
+            </div>
+            <div id="cust-order-list"></div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="goHome()">กลับหน้าหลัก</button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 🏬 SHOP ADMIN DASHBOARD -->
+        <!-- ========================================== -->
+        <div class="step" id="step-shop-admin">
+            <h2>🏬 ระบบหลังร้าน <button class="btn btn-outline btn-sm" style="float: right;" onclick="goHome()">ปิด</button></h2>
+            
+            <!-- Shop Settings -->
+            <div style="background: #eef2f7; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <strong style="font-size: 1.1em;" id="admin-shop-name">ชื่อร้าน...</strong>
+                    <label class="switch"><input type="checkbox" id="admin-shop-open" onchange="updateShopSetting()"><span class="slider"></span></label>
+                </div>
+                <div style="font-size: 0.85em; color: #555;">
+                    <label>เบอร์ PromptPay รับเงิน:</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="admin-shop-pp" style="margin:0; padding: 8px;">
+                        <button class="btn btn-primary btn-sm" onclick="updateShopSetting()">บันทึก</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <div class="stat-box"><div class="stat-val" id="admin-stat-sales">0</div><div class="stat-label">ยอดขายวันนี้ (฿)</div></div>
+                <div class="stat-box"><div class="stat-val" id="admin-stat-count">0</div><div class="stat-label">จำนวนออร์เดอร์</div></div>
+            </div>
+
+            <!-- Menu Toggle -->
+            <div style="margin-bottom: 20px;">
+                <h3 style="font-size: 1em; color: #2a5298; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">📋 จัดการสถานะเมนู</h3>
+                <div id="admin-menu-list" style="max-height: 200px; overflow-y: auto;"></div>
+            </div>
+
+            <!-- Orders -->
+            <div>
+                <h3 style="font-size: 1em; color: #d32f2f; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    📦 ออร์เดอร์ร้านคุณ <span class="badge badge-green" style="animation: pulseText 2s infinite;">Auto Refresh</span>
+                </h3>
+                <div id="admin-orders-list"></div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 🛵 RIDER DASHBOARD -->
+        <!-- ========================================== -->
+        <div class="step" id="step-rider">
+            <h2>🛵 ระบบรับงานจัดส่ง <button class="btn btn-outline btn-sm" style="float: right;" onclick="goHome()">ปิด</button></h2>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee;">
+                <span style="font-weight: bold; color: #333;">สถานะรับงาน: <span id="rider-status-text" style="color: #dc3545;">ออฟไลน์</span></span>
+                <label class="switch"><input type="checkbox" id="rider-online-toggle" onchange="toggleRiderOnline()"><span class="slider"></span></label>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <div class="stat-box"><div class="stat-val" id="rider-stat-income" style="color: #28a745;">0</div><div class="stat-label">รายได้ค่าส่ง (฿)</div></div>
+                <div class="stat-box"><div class="stat-val" id="rider-stat-count">0</div><div class="stat-label">งานสำเร็จ</div></div>
+            </div>
+            
+            <h3 style="color: #ff9800; font-size: 1em; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                🚨 งานที่กำลังดำเนินการ <span class="badge badge-green" style="animation: pulseText 2s infinite;">Auto Refresh</span>
+            </h3>
+            <div id="rider-jobs-list"></div>
+            
+            <input type="file" id="photo-upload" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUpload(this)">
+        </div>
+
+    </div>
+
+    <!-- Floating Cart -->
+    <div class="float-cart empty" id="float-cart" onclick="showCartSummary()" style="display:none;">
+    <div id="radar-modal" class="radar-modal-overlay">
+        <!-- ... (เนื้อหา modal เรดาร์) ... -->
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // ⭐️ อัปเดตลิงก์ Web App ตัวใหม่ของพี่ณะเรียบร้อยแล้วค่ะ ⭐️
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxtUiAa1kkD5lKbrb6xMX7uLLAhjDb1JKspzzgglqDpGz2lwoff6bdFnmBWtUxUzZxl/exec"; 
+        const LIFF_ID = "2009330600-7EPu6qAI";
+
+        let state = {
+            uid: "", name: "", role: "CUSTOMER", shopId: null, isOnline: false,
+            shops: [], menus: [], cart: [], cartShopId: null,
+            map: null, marker: null, shopLocation: [13.8825208, 100.4553696], 
+            slipBase64: null, adminInterval: null, riderInterval: null
+        };
+
+        window.onload = async function() {
+            try {
+                await liff.init({ liffId: LIFF_ID, withLoginOnExternalBrowser: true });
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    state.uid = profile.userId; 
+                    state.name = profile.displayName;
+                    document.getElementById('custName').value = state.name;
+                    loadMarketData();
+                } else { 
+                    liff.login({ redirectUri: window.location.href }); 
+                }
+            } catch(e) { 
+                console.warn("LIFF Init failed, loading data anyway for testing.");
+                loadMarketData(); 
+            } 
+        }
+
+        async function api(payload) {
+            payload.uid = state.uid; 
+            payload._t = new Date().getTime();
+            try {
+                const res = await fetch(GAS_URL, { 
+                    method: 'POST', 
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' } // ป้องกัน CORS issue เบื้องต้น
+                });
+                return await res.json();
+            } catch(e) { 
+                hideLoader(); 
+                Swal.fire('Error', 'เชื่อมต่อเซิร์ฟเวอร์ล้มเหลว', 'error'); 
+                throw e; 
+            }
+        }
+
+        function showLoader(msg) { 
+            document.getElementById('loader-text').innerText = msg || 'กำลังโหลด...'; 
+            document.getElementById('loader-overlay').style.display = 'flex'; 
+        }
+        function hideLoader() { 
+            document.getElementById('loader-overlay').style.display = 'none'; 
+        }
+        
+        function showStep(stepId) { 
+            document.querySelectorAll('.step').forEach(el => el.style.display = 'none'); 
+            document.getElementById('step-' + stepId).style.display = 'block'; 
+            window.scrollTo(0,0);
+            
+            const floatCart = document.getElementById('float-cart');
+            if (stepId === 'home' || stepId === 'menu') {
+                floatCart.style.display = 'flex';
+            } else {
+                floatCart.style.display = 'none';
+            }
+            
+            if(state.adminInterval) { clearInterval(state.adminInterval); state.adminInterval = null; }
+            if(state.riderInterval) { clearInterval(state.riderInterval); state.riderInterval = null; }
+
+            if(stepId === 'delivery') setTimeout(initMap, 200);
+            if(stepId === 'shop-admin') { loadShopAdminData(); state.adminInterval = setInterval(loadShopAdminDataSilent, 10000); }
+            if(stepId === 'rider') { loadRiderJobs(); state.riderInterval = setInterval(loadRiderJobsSilent, 10000); }
+        }
+
+        function goHome() { showStep('home'); renderCategories(); }
+
+        async function loadMarketData() {
+            showLoader('เปิดตลาด...');
+            const data = await api({ action: 'getMarketData' });
+            if(data && !data.error) {
+                state.shops = data.shops; 
+                state.menus = data.menus;
+                state.role = data.user.role; 
+                state.shopId = data.user.shopId; 
+                state.isOnline = data.user.isOnline;
+                
+                if(state.role === 'SHOP' || state.role === 'RIDER') {
+                    document.getElementById('staff-dashboard-btn').style.display = 'block';
+                    const badge = document.getElementById('user-role-badge');
+                    badge.innerText = state.role === 'SHOP' ? 'ร้านค้า' : 'พนักงานจัดส่ง';
+                    badge.style.background = state.role === 'SHOP' ? '#dc3545' : '#28a745';
+                    
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if(urlParams.get('page') === 'status') {
+                        enterDashboard(); 
+                        return;
+                    }
+                }
+                
+                try { 
+                    const savedCart = localStorage.getItem('8rai_cart'); 
+                    const savedShop = localStorage.getItem('8rai_cart_shop');
+                    if(savedCart) { 
+                        state.cart = JSON.parse(savedCart); 
+                        state.cartShopId = savedShop; 
+                        updateCartBadge(); 
+                    }
+                    const savedPhone = localStorage.getItem('8rai_phone'); 
+                    if(savedPhone) {
+                        document.getElementById('custPhone').value = savedPhone;
+                    }
+                } catch(e) {}
+
+                hideLoader(); 
+                goHome();
+            } else { 
+                hideLoader(); 
+                Swal.fire('Error', 'โหลดข้อมูลตลาดล้มเหลว', 'error'); 
+            }
+        }
+
+        function enterDashboard() {
+            if(state.role === 'SHOP') showStep('shop-admin');
+            else if (state.role === 'RIDER') showStep('rider');
+        }
+
+        function renderCategories() {
+            const cats = [...new Set(state.shops.map(s => s.category).filter(c => c))];
+            let html = '';
+            cats.forEach(c => {
+                const count = state.shops.filter(s => s.category === c && s.isOpen).length;
+                let icon = '🍔';
+                if(c.includes('ชานม') || c.includes('กาแฟ')) icon = '🧋';
+                if(c.includes('ก๋วยเตี๋ยว')) icon = '🍜';
+                
+                html += '<div class="category-card" onclick="filterShops(\'' + c + '\')">';
+                html += '<span class="category-icon">' + icon + '</span>';
+                html += '<h3>' + c + '</h3><p>' + count + ' ร้านเปิดอยู่</p></div>';
+            });
+            document.getElementById('cat-grid').innerHTML = html;
+            renderShops(state.shops);
+        }
+
+        function filterShops(cat) {
+            renderShops(state.shops.filter(s => s.category === cat));
+            document.getElementById('shop-grid').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function searchMenu() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            const btn = document.getElementById('clear-search-btn');
+            if(!q) { btn.style.display = 'none'; renderShops(state.shops); return; }
+            btn.style.display = 'block';
+            const filteredShops = state.shops.filter(s => s.shopName.toLowerCase().includes(q) || s.category.toLowerCase().includes(q));
+            renderShops(filteredShops);
+        }
+        
+        function clearSearch() { 
+            document.getElementById('search-input').value = ''; 
+            searchMenu(); 
+        }
+
+        function renderShops(shopList) {
+            let html = '';
+            shopList.forEach(s => {
+                const badge = s.isOpen ? '<span class="badge badge-green" style="position:absolute; top:5px; right:5px;">เปิด</span>' : '<span class="badge badge-red" style="position:absolute; top:5px; right:5px;">ปิด</span>';
+                const opacity = s.isOpen ? '1' : '0.5';
+                const img = s.imageUrl || 'https://via.placeholder.com/150?text=Shop';
+                const onClickStr = s.isOpen ? "openShop('" + s.shopId + "')" : "Swal.fire('ร้านปิด','ร้าน " + s.shopName + " ปิดให้บริการขณะนี้','info')";
+                
+                html += '<div class="card" style="position:relative; opacity:' + opacity + '" onclick="' + onClickStr + '">';
+                html += badge + '<img src="' + img + '"><h3>' + s.shopName + '</h3><p>' + s.category + '</p></div>';
+            });
+            if(html === '') html = '<p style="grid-column: span 2; text-align:center; color:#888;">ไม่พบร้านค้า</p>';
+            document.getElementById('shop-grid').innerHTML = html;
+        }
+
+        function openShop(shopId) {
+            const shop = state.shops.find(s => s.shopId === shopId);
+            if(!shop) return;
+            
+            let headerHtml = '<img src="' + (shop.imageUrl || 'https://via.placeholder.com/150') + '" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">';
+            headerHtml += '<div><h3 style="margin:0; color:#1e3c72;">' + shop.shopName + '</h3><p style="margin:0; font-size:0.85em; color:#666;">' + shop.category + '</p></div>';
+            document.getElementById('shop-header').innerHTML = headerHtml;
+            
+            const shopMenus = state.menus.filter(m => m.shopId === shopId);
+            let html = '';
+            shopMenus.forEach(m => {
+                const img = m.imageUrl || 'https://via.placeholder.com/150';
+                let actionBtn = '';
+                if(m.isAvailable) {
+                    actionBtn = '<button class="btn btn-outline btn-sm" onclick="addToCart(\'' + m.menuId + '\', \'' + shopId + '\')">+ เพิ่ม (' + m.price + '฿)</button>';
+                } else {
+                    actionBtn = '<span style="color:#dc3545; font-size:0.8em; font-weight:bold;">หมดชั่วคราว</span>';
+                }
+
+                html += '<div class="list-item"><img src="' + img + '"><div class="list-info"><h4>' + m.name + '</h4><span class="price">' + m.price + ' ฿</span></div><div>' + actionBtn + '</div></div>';
+            });
+            document.getElementById('menu-list').innerHTML = html;
+            showStep('menu');
+        }
+
+        function addToCart(menuId, shopId) {
+            if (state.cartShopId && state.cartShopId !== shopId) {
+                Swal.fire({ 
+                    title: 'ขออภัยค่ะ', 
+                    text: 'ระบบรองรับการสั่งทีละ 1 ร้านค้านะคะ กรุณาชำระเงินของร้านเดิมก่อน หรือล้างตะกร้าใหม่ค่ะ', 
+                    icon: 'warning', 
+                    showCancelButton: true, 
+                    confirmButtonText: 'ล้างตะกร้าใหม่', 
+                    cancelButtonText: 'สั่งร้านเดิมต่อ' 
+                }).then((r) => {
+                    if(r.isConfirmed) { 
+                        state.cart = []; 
+                        state.cartShopId = shopId; 
+                        proceedAdd(menuId); 
+                    }
+                });
+                return;
+            }
+            state.cartShopId = shopId;
+            proceedAdd(menuId);
+        }
+
+        function proceedAdd(menuId) {
+            const menu = state.menus.find(m => m.menuId === menuId);
+            const exist = state.cart.find(i => i.menuId === menuId);
+            if(exist) exist.quantity++; 
+            else state.cart.push({ ...menu, quantity: 1 });
+            
+            updateCartBadge(); 
+            saveCart();
+            Swal.fire({toast:true, position:'top-end', icon:'success', title:'เพิ่มลงตะกร้าแล้ว', showConfirmButton:false, timer:1500});
+        }
+
+        function updateCartBadge() {
+            const cnt = state.cart.reduce((a,b)=>a+b.quantity, 0);
+            document.getElementById('cart-badge').innerText = cnt;
+            const el = document.getElementById('float-cart');
+            if(cnt > 0) el.classList.remove('empty'); 
+            else el.classList.add('empty');
+        }
+        
+        function saveCart() { 
+            localStorage.setItem('8rai_cart', JSON.stringify(state.cart)); 
+            localStorage.setItem('8rai_cart_shop', state.cartShopId); 
+        }
+        
+        function clearCart() { 
+            state.cart = []; 
+            state.cartShopId = null; 
+            updateCartBadge(); 
+            saveCart(); 
+        }
+
+        function showCartSummary() {
+            if(state.cart.length === 0) return Swal.fire('ตะกร้าว่าง', 'เลือกเมนูอร่อยๆ ก่อนนะคะ', 'info');
+            const shop = state.shops.find(s => s.shopId === state.cartShopId);
+            document.getElementById('cart-shop-name').innerText = "ร้าน : " + (shop ? shop.shopName : 'ไม่ระบุ');
+            
+            let html = ''; let total = 0;
+            state.cart.forEach((item, idx) => {
+                total += item.price * item.quantity;
+                html += '<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee;">';
+                html += '<div style="flex:1;"><b>' + item.name + '</b> <span style="color:#d32f2f;">' + (item.price*item.quantity) + '฿</span></div>';
+                html += '<div style="display:flex; align-items:center; gap:10px;">';
+                html += '<button class="btn btn-danger btn-sm" style="padding:2px 8px;" onclick="changeQty(' + idx + ', -1)">-</button>';
+                html += '<span>' + item.quantity + '</span>';
+                html += '<button class="btn btn-success btn-sm" style="padding:2px 8px;" onclick="changeQty(' + idx + ', 1)">+</button>';
+                html += '<button class="btn btn-outline btn-sm" style="border:none;" onclick="changeQty(' + idx + ', -99)">🗑️</button>';
+                html += '</div></div>';
+            });
+            document.getElementById('cart-items').innerHTML = html;
+            document.getElementById('cart-total').innerText = total;
+            showStep('cart');
+        }
+
+        function changeQty(idx, amt) {
+            state.cart[idx].quantity += amt;
+            if(state.cart[idx].quantity <= 0) state.cart.splice(idx, 1);
+            if(state.cart.length === 0) { 
+                clearCart(); 
+                goHome(); 
+            } else { 
+                updateCartBadge(); 
+                saveCart(); 
+                showCartSummary(); 
+            }
+        }
+
+        function proceedToCheckout() {
+            if(!state.cart.length) return;
+            document.getElementById('custAddress').value = ""; 
+            showStep('delivery');
+        }
+
+        function initMap() {
+            if(state.map) { state.map.invalidateSize(); return; }
+            try {
+                state.map = L.map('map').setView(state.shopLocation, 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(state.map);
+                state.marker = L.marker(state.shopLocation, {draggable: true}).addTo(state.map);
+                state.map.on('click', e => state.marker.setLatLng(e.latlng));
+            } catch(e) {}
+        }
+
+        function getLocation() {
+            showLoader('ค้นหาพิกัด...');
+            navigator.geolocation.getCurrentPosition(
+                p => { 
+                    const ll = [p.coords.latitude, p.coords.longitude]; 
+                    state.marker.setLatLng(ll); 
+                    state.map.setView(ll, 15); 
+                    hideLoader(); 
+                },
+                e => { 
+                    hideLoader(); 
+                    Swal.fire('Error', 'ไม่สามารถดึงตำแหน่งได้', 'error'); 
+                }, 
+                {enableHighAccuracy: true, timeout: 10000}
+            );
+        }
+
+        function toggleMap() {
+            const isDel = document.getElementById('delTypeDel').checked;
+            document.getElementById('map-section').style.display = isDel ? 'block' : 'none';
+            document.getElementById('custAddress').style.display = isDel ? 'block' : 'none';
+            if(isDel && state.map) setTimeout(()=>state.map.invalidateSize(), 100);
+        }
+
+        function calculateSummary() {
+            const n = document.getElementById('custName').value.trim(); 
+            const p = document.getElementById('custPhone').value.trim(); 
+            const a = document.getElementById('custAddress').value.trim();
+            const isDel = document.getElementById('delTypeDel').checked;
+            
+            if(!n || !p) return Swal.fire('ข้อมูลไม่ครบ', 'ใส่ชื่อและเบอร์โทรด้วยค่ะ', 'warning');
+            if(isDel && !a) return Swal.fire('ข้อมูลไม่ครบ', 'ระบุที่อยู่จัดส่งด้วยค่ะ', 'warning');
+            
+            localStorage.setItem('8rai_phone', p); 
+
+            let dist = 0; let fee = 0; 
+            let food = state.cart.reduce((s,i)=>s+(i.price*i.quantity),0);
+            
+            if(isDel) {
+                dist = calculateDistance(state.marker.getLatLng().lat, state.marker.getLatLng().lng);
+                if(dist > 4.5) return Swal.fire('ไกลเกินไป', 'ขออภัยค่ะ ระยะจัดส่งเกิน 4.5 กม.', 'error');
+                fee = calculateDeliveryFee(dist, food);
+            }
+
+            let html = '';
+            state.cart.forEach(i => {
+                html += '<div style="display:flex;justify-content:space-between; font-size:0.9em; border-bottom:1px dashed #eee; padding:5px 0;">';
+                html += '<span>' + i.name + ' x' + i.quantity + '</span><b>' + (i.price*i.quantity) + '฿</b></div>';
+            });
+            
+            document.getElementById('summary-items').innerHTML = html;
+            document.getElementById('sum-food').innerText = food + ' ฿';
+            document.getElementById('sum-dist').innerText = isDel ? '(' + dist.toFixed(1) + 'กม.)' : '(หน้าร้าน)';
+            document.getElementById('sum-del').innerText = fee + ' ฿';
+            document.getElementById('sum-total').innerText = (food+fee) + ' ฿';
+            
+            const shop = state.shops.find(s => s.shopId === state.cartShopId);
+            document.getElementById('shop-promptpay-display').innerText = "พร้อมเพย์ร้าน: " + (shop.promptpay || 'ไม่ระบุ');
+            
+            let pp = shop.promptpay ? shop.promptpay.replace(/[^0-9]/g, '') : "0000000000";
+            let pl = generatePromptPayPayload(pp, food+fee);
+            document.getElementById('qr-img').src = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(pl) + "&size=300x300";
+
+            showStep('pay');
+        }
+
+        function toggleSlip() {
+            const isCash = document.getElementById('payCash').checked;
+            document.getElementById('qr-section').style.display = isCash ? 'none' : 'block';
+            if(isCash) { 
+                state.slipBase64 = null; 
+                document.getElementById('slip-preview').style.display='none'; 
+                document.getElementById('slip-file').value=''; 
+            }
+        }
+
+        function previewSlip(input) {
+            if(input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = new Image(); img.onload = () => {
+                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                        let w = img.width; let h = img.height; const MAX = 800;
+                        if(w>h) { if(w>MAX) {h*=MAX/w; w=MAX;} } else { if(h>MAX) {w*=MAX/h; h=MAX;} }
+                        canvas.width = w; canvas.height = h; ctx.drawImage(img,0,0,w,h);
+                        state.slipBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('slip-preview').src = state.slipBase64;
+                        document.getElementById('slip-preview').style.display = 'block';
+                    }; img.src = e.target.result;
+                }; reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function submitOrder() {
+            const isCash = document.getElementById('payCash').checked;
+            if(!isCash && !state.slipBase64) return Swal.fire('ข้อมูลไม่ครบ', 'กรุณาแนบสลิปโอนเงินค่ะ', 'warning');
+            
+            const isDel = document.getElementById('delTypeDel').checked;
+            let food = state.cart.reduce((s,i)=>s+(i.price*i.quantity),0);
+            let dist = isDel ? calculateDistance(state.marker.getLatLng().lat, state.marker.getLatLng().lng) : 0;
+            let fee = isDel ? calculateDeliveryFee(dist, food) : 0;
+            
+            const payload = {
+                shopId: state.cartShopId, uid: state.uid, lineDisplayName: state.name,
+                customerName: document.getElementById('custName').value.trim(), phone: document.getElementById('custPhone').value.trim(),
+                address: isDel ? document.getElementById('custAddress').value.trim() : 'รับหน้าร้าน',
+                lat: isDel ? state.marker.getLatLng().lat : 0, lng: isDel ? state.marker.getLatLng().lng : 0,
+                items: state.cart, totalFood: food, deliveryFee: fee, totalAmount: food+fee, distance: dist,
+                additionalNotes: document.getElementById('custNote').value, paymentMethod: isCash ? 'เงินสด' : 'โอนเงิน', slip: state.slipBase64
+            };
+
+            showLoader('ส่งคำสั่งซื้อเข้าร้าน...');
+            const res = await api({ action: 'submitOrder', data: payload });
+            hideLoader();
+            if(res && res.success) {
+                Swal.fire({
+                    title:'สำเร็จ!', 
+                    text:'ส่งออร์เดอร์ให้ร้านแล้วค่ะ\nหมายเลข: ' + res.orderNumber, 
+                    icon:'success'
+                }).then(()=>{
+                    clearCart(); fetchCustomerOrders();
+                });
+            }
+        }
+
+        async function fetchCustomerOrders() {
+            showLoader();
+            const res = await api({ action: 'getTodayOrders' });
+            hideLoader();
+            const list = document.getElementById('cust-order-list'); list.innerHTML = '';
+            if(res && res.orders && res.orders.length > 0) {
+                const myOrders = res.orders.filter(o => o.uid === state.uid && o.status !== 'จัดส่งสำเร็จ' && o.status !== 'ยกเลิก');
+                if(myOrders.length === 0) { 
+                    list.innerHTML = '<p style="text-align:center;">ไม่มีออร์เดอร์ที่กำลังดำเนินการ</p>'; 
+                }
+                myOrders.forEach(o => {
+                    const shop = state.shops.find(s => s.shopId === o.shopId);
+                    let html = '<div class="order-item" style="border-left: 4px solid #1e3c72;">';
+                    html += '<div style="display:flex; justify-content:space-between;"><b>' + o.orderNumber.slice(-6) + '</b><span class="badge badge-green">' + o.status + '</span></div>';
+                    html += '<p style="margin:5px 0; font-size:0.9em; color:#666;">ร้าน: ' + (shop ? shop.shopName : o.shopId) + '</p>';
+                    html += '<p style="margin:5px 0; font-size:0.9em;">ยอด: ' + o.totalAmount + ' ฿ (' + o.paymentMethod + ')</p>';
+                    html += '</div>';
+                    list.innerHTML += html;
+                });
+            } else { list.innerHTML = '<p style="text-align:center;">ไม่มีออร์เดอร์</p>'; }
+            showStep('status');
+        }
+
+        // ==========================================
+        // 🏬 SHOP ADMIN Logic
+        // ==========================================
+        async function loadShopAdminData(silent = false) {
+            if(!silent) showLoader('โหลดข้อมูลร้าน...');
+            const res = await api({ action: 'getShopOrders', shopId: state.shopId });
+            if(!silent) hideLoader();
+            
+            const myShop = state.shops.find(s => s.shopId === state.shopId);
+            if(myShop) {
+                document.getElementById('admin-shop-name').innerText = "ร้าน: " + myShop.shopName;
+                document.getElementById('admin-shop-open').checked = myShop.isOpen;
+                if(!silent) document.getElementById('admin-shop-pp').value = myShop.promptpay;
+            }
+
+            if(res && res.stats) {
+                document.getElementById('admin-stat-sales').innerText = res.stats.sales || 0;
+                document.getElementById('admin-stat-count').innerText = res.stats.count || 0;
+            }
+
+            if(!silent) {
+                const myMenus = state.menus.filter(m => m.shopId === state.shopId);
+                let mHtml = '';
+                myMenus.forEach(m => {
+                    let checkedState = m.isAvailable ? 'checked' : '';
+                    mHtml += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee; font-size:0.9em;">';
+                    mHtml += '<span>' + m.name + '</span>';
+                    mHtml += '<label class="switch"><input type="checkbox" ' + checkedState + ' onchange="toggleMenu(\'' + m.menuId + '\', this.checked)"><span class="slider"></span></label>';
+                    mHtml += '</div>';
+                });
+                document.getElementById('admin-menu-list').innerHTML = mHtml;
+            }
+
+            const oList = document.getElementById('admin-orders-list'); oList.innerHTML = '';
+            if(res && res.orders && res.orders.length > 0) {
+                res.orders.forEach(o => {
+                    let actionHtml = '';
+                    if(o.status !== 'จัดส่งสำเร็จ' && o.status !== 'ยกเลิก') {
+                        if(o.address === 'รับหน้าร้าน') {
+                            actionHtml = '<div style="margin-top:10px; background:#eef2f7; padding:8px; border-radius:8px; text-align:center; color:#1e3c72; font-size:0.9em; font-weight:bold;">ลูกค้ารับหน้าร้าน</div>';
+                        } else {
+                            if(!o.riderUid) {
+                                actionHtml = '<div style="display:flex; gap:5px; margin-top:10px;">';
+                                actionHtml += '<button class="btn btn-outline btn-sm" style="flex:1;" onclick="callRider(\'' + o.orderNumber + '\', \'SHOP_DELIVERY\')">🏠 ร้านส่งเอง</button>';
+                                actionHtml += '<button class="btn btn-primary btn-sm" style="flex:2;" onclick="callRider(\'' + o.orderNumber + '\', \'' + state.shopId + '\')">🛵 เรียกไรเดอร์ (สลับคิว)</button>';
+                                actionHtml += '</div>';
+                            } else {
+                                let statRider = o.riderAccepted ? '<span style="color:#28a745;">(รับงานแล้ว)</span>' : '<span style="color:#ff9800;">(รอรับงาน..)</span>';
+                                let changeRiderBtn = '';
+                                if (!o.riderAccepted) {
+                                    changeRiderBtn = '<button class="btn btn-danger btn-sm" style="float:right; padding:2px 5px;" onclick="callRider(\'' + o.orderNumber + '\', \'' + state.shopId + '\')">🔄 เปลี่ยนคน</button><div style="clear:both;"></div>';
+                                }
+                                actionHtml = '<div style="margin-top:10px; background:#f8f9fa; padding:8px; border-radius:8px; font-size:0.85em; border:1px dashed #ccc;">';
+                                actionHtml += '<b>ผู้ส่ง:</b> ' + o.riderName + ' ' + statRider + changeRiderBtn + '</div>';
+                            }
+                        }
+                        actionHtml += '<div style="margin-top:10px; display:flex; gap:5px;">';
+                        actionHtml += '<button class="btn btn-sm" style="background:#17a2b8; color:white; flex:1;" onclick="changeStatus(\'' + o.orderNumber + '\', \'กำลังทำเครื่องดื่ม\')">🍳 กำลังทำ</button>';
+                        actionHtml += '<button class="btn btn-sm" style="background:#28a745; color:white; flex:1;" onclick="changeStatus(\'' + o.orderNumber + '\', \'จัดส่งสำเร็จ\')">✅ สำเร็จ</button>';
+                        actionHtml += '<button class="btn btn-sm btn-danger" onclick="changeStatus(\'' + o.orderNumber + '\', \'ยกเลิก\')">❌</button>';
+                        actionHtml += '</div>';
+                    }
+                    
+                    let slipBtn = o.slipUrl ? '<a href="' + o.slipUrl + '" target="_blank" style="font-size:0.8em; color:#1e3c72; float:right;">ดูสลิป</a>' : '';
+                    let notesHtml = o.notes ? '<p style="margin:4px 0; font-size:0.8em; color:#e65100; background:#fffde7; padding:4px;">โน้ต: ' + o.notes + '</p>' : '';
+
+                    let orderHtml = '<div class="order-item" style="border-left: 4px solid #ff9800;">';
+                    orderHtml += '<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><b>#' + o.orderNumber.slice(-6) + '</b><span class="badge badge-green">' + o.status + '</span></div>';
+                    orderHtml += '<p style="margin:2px 0; font-size:0.9em;"><b>ลูกค้า:</b> ' + o.customerName + ' (' + o.phone + ')</p>';
+                    orderHtml += '<p style="margin:2px 0; font-size:0.9em;"><b>เมนู:</b> ' + o.itemsStr + '</p>';
+                    orderHtml += '<p style="margin:2px 0; font-size:0.9em;"><b>ยอดอาหาร:</b> <span style="color:#d32f2f; font-weight:bold;">' + o.totalFood + ' ฿</span> ' + slipBtn + '</p>';
+                    orderHtml += notesHtml + actionHtml + '</div>';
+                    oList.innerHTML += orderHtml;
+                });
+            } else { oList.innerHTML = '<p style="text-align:center; color:#888;">ไม่มีออร์เดอร์</p>'; }
+        }
+        function loadShopAdminDataSilent() { loadShopAdminData(true); }
+
+        async function updateShopSetting() {
+            const isOpen = document.getElementById('admin-shop-open').checked;
+            const pp = document.getElementById('admin-shop-pp').value.trim();
+            showLoader();
+            await api({ action: 'updateShopStatus', shopId: state.shopId, isOpen: isOpen, promptPay: pp });
+            hideLoader(); Swal.fire({toast:true, position:'top-end', icon:'success', title:'บันทึกสำเร็จ', showConfirmButton:false, timer:1500});
+        }
+        async function toggleMenu(menuId, isAvail) {
+            showLoader(); await api({ action: 'updateMenuStatus', menuId: menuId, isAvailable: isAvail }); hideLoader();
+        }
+        async function changeStatus(orderNum, stat) {
+            showLoader(); await api({ action: 'updateOrderStatus', orderNumber: orderNum, newStatus: stat }); loadShopAdminData();
+        }
+        async function callRider(orderNum, sId) {
+            showLoader('หาไรเดอร์...');
+            const res = await api({ action: 'assignRiderRoundRobin', orderNumber: orderNum, shopId: sId });
+            hideLoader();
+            if(res.success) Swal.fire('สำเร็จ', 'มอบหมายงานให้ ' + res.riderName + ' แล้ว', 'success');
+            else Swal.fire('ผิดพลาด', res.message || 'ไม่มีไรเดอร์รับงาน', 'error');
+            loadShopAdminData();
+        }
+
+        // ==========================================
+        // 🛵 RIDER Logic
+        // ==========================================
+        async function loadRiderJobs(silent = false) {
+            if(!silent) showLoader();
+            const res = await api({ action: 'getRiderJobs' });
+            if(!silent) hideLoader();
+
+            document.getElementById('rider-online-toggle').checked = state.isOnline;
+            document.getElementById('rider-status-text').innerText = state.isOnline ? 'ออนไลน์ 🟢' : 'ออฟไลน์ 🔴';
+            document.getElementById('rider-status-text').style.color = state.isOnline ? '#28a745' : '#dc3545';
+
+            if(res && res.stats) {
+                document.getElementById('rider-stat-income').innerText = res.stats.income || 0;
+                document.getElementById('rider-stat-count').innerText = res.stats.count || 0;
+            }
+
+            const list = document.getElementById('rider-jobs-list'); list.innerHTML = '';
+            if(res && res.jobs && res.jobs.length > 0) {
+                res.jobs.forEach(j => {
+                    const shop = state.shops.find(s => s.shopId === j.shopId);
+                    let acts = '';
+                    if(!j.riderAccepted) {
+                        acts = '<div style="display:flex; gap:5px; margin-top:10px;">';
+                        acts += '<button class="btn btn-success btn-sm" style="flex:2;" onclick="riderAction(\'acceptAssignedOrder\', \'' + j.orderNumber + '\')">✅ ยืนยันรับงาน</button>';
+                        acts += '<button class="btn btn-outline btn-sm btn-danger" style="flex:1;" onclick="riderAction(\'rejectAssignedOrder\', \'' + j.orderNumber + '\')">ปฏิเสธ</button></div>';
+                    } else if (j.status !== 'อยู่ระหว่างจัดส่ง') {
+                        acts = '<div style="display:flex; gap:5px; margin-top:10px;">';
+                        acts += '<button class="btn btn-primary btn-sm" style="flex:2; background:#ff9800;" onclick="takePhoto(\'' + j.orderNumber + '\', \'pickup\')">📸 ถ่ายรูปรับอาหาร</button>';
+                        acts += '<button class="btn btn-outline btn-sm" style="flex:1;" onclick="skipPhoto(\'' + j.orderNumber + '\', \'pickup\')">⏭️ ข้าม</button></div>';
+                    } else {
+                        acts = '<div style="display:flex; gap:5px; margin-top:10px;">';
+                        acts += '<button class="btn btn-success btn-sm" style="flex:2;" onclick="takePhoto(\'' + j.orderNumber + '\', \'complete\')">📸 ถ่ายรูปส่ง (ปิดงาน)</button>';
+                        acts += '<button class="btn btn-outline btn-sm" style="flex:1;" onclick="skipPhoto(\'' + j.orderNumber + '\', \'complete\')">⏭️ ปิดงานเลย</button></div>';
+                    }
+
+                    let mapLinkHtml = '';
+                    if (j.mapLink) {
+                        mapLinkHtml = '<a href="' + j.mapLink + '" target="_blank" class="btn btn-outline btn-sm" style="width:100%; margin-top:5px; text-decoration:none;">📍 นำทาง</a>';
+                    }
+
+                    let shopNameDisplay = shop ? shop.shopName : j.shopId;
+                    
+                    let html = '<div class="order-item" style="border-left: 4px solid #1e3c72;">';
+                    html += '<div style="display:flex; justify-content:space-between;"><b>#' + j.orderNumber.slice(-6) + '</b> <span style="color:#d32f2f; font-weight:bold;">ค่าส่ง: ' + j.deliveryFee + ' ฿</span></div>';
+                    html += '<p style="margin:5px 0; font-size:0.9em; background:#eef2f7; padding:5px; border-radius:5px;"><b>รับที่:</b> ' + shopNameDisplay + '</p>';
+                    html += '<p style="margin:5px 0; font-size:0.9em;"><b>ส่งที่:</b> ' + j.customerName + ' - ' + j.address + '</p>';
+                    html += '<p style="margin:5px 0; font-size:0.9em;"><b>โทร:</b> <a href="tel:' + j.phone + '">' + j.phone + '</a></p>';
+                    html += mapLinkHtml + acts + '</div>';
+                    
+                    list.innerHTML += html;
+                });
+            } else { list.innerHTML = '<p style="text-align:center; color:#888;">กำลังรองาน...</p>'; }
+        }
+        function loadRiderJobsSilent() { loadRiderJobs(true); }
+
+        async function toggleRiderOnline() {
+            const st = document.getElementById('rider-online-toggle').checked;
+            showLoader(); await api({ action: 'setRiderStatus', isOnline: st }); state.isOnline = st; hideLoader(); loadRiderJobs();
+        }
+        async function riderAction(act, num) {
+            showLoader(); await api({ action: act, orderNumber: num }); loadRiderJobs();
+        }
+        
+        function takePhoto(num, type) {
+            const input = document.getElementById('photo-upload');
+            input.setAttribute('data-num', num); input.setAttribute('data-type', type); input.click();
+        }
+        function skipPhoto(num, type) {
+            Swal.fire({title:'ข้ามการถ่ายรูป?', text:'ยืนยันอัปเดตสถานะเลยหรือไม่?', icon:'question', showCancelButton:true, confirmButtonText:'ยืนยัน'}).then(r => {
+                if(r.isConfirmed) {
+                    showLoader(); api({ action: 'completeDelivery', orderNumber: num, imageBase64: "", type: type }).then(()=>loadRiderJobs());
+                }
+            });
+        }
+        function handlePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const num = input.getAttribute('data-num'); const type = input.getAttribute('data-type');
+                const reader = new FileReader(); showLoader('อัปโหลดรูป...');
+                reader.onload = e => {
+                    const img = new Image(); img.onload = () => {
+                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                        let w = img.width; let h = img.height; const MAX = 800;
+                        if(w>h) { if(w>MAX) {h*=MAX/w; w=MAX;} } else { if(h>MAX) {w*=MAX/h; h=MAX;} }
+                        canvas.width = w; canvas.height = h; ctx.drawImage(img,0,0,w,h);
+                        api({ action: 'completeDelivery', orderNumber: num, imageBase64: canvas.toDataURL('image/jpeg', 0.8), type: type }).then(()=>loadRiderJobs());
+                        input.value = '';
+                    }; img.src = e.target.result;
+                }; reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>
