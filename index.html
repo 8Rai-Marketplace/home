@@ -1080,7 +1080,7 @@
             document.getElementById('admin-menu-list').innerHTML = mHtml;
         }
 
-        // ⭐️ ระบบสร้างและแก้ไขตัวเลือกเสริมแบบ Dynamic UI 
+        // ⭐️ ระบบสร้างและแก้ไขตัวเลือกเสริมแบบ Dynamic UI + คัดลอก Template
         window.currentEditingOptions = [];
         
         function openMenuModal(menuObj) {
@@ -1091,9 +1091,23 @@
             let mCat = isNew ? '' : (menuObj.category || '');
             let mImg = isNew ? '' : (menuObj.imageUrl ? getDirectImageUrl(menuObj.imageUrl) : '');
             
-            // นำข้อมูล Option เดิมมาใส่ตัวแปร Global
             window.currentEditingOptions = isNew || !menuObj.options ? [] : JSON.parse(JSON.stringify(menuObj.options));
             state.tempImageBase64 = null;
+
+            // สร้าง Dropdown คัดลอก Template จากเมนูอื่นในร้าน
+            const shopMenusWithOptions = state.menus.filter(m => m.shopId === state.shopId && m.options && m.options.length > 0 && m.menuId !== mId);
+            let templateSelectHtml = '';
+            if (shopMenusWithOptions.length > 0) {
+                let opts = `<option value="">-- คัดลอกตัวเลือกจากเมนูอื่น --</option>`;
+                shopMenusWithOptions.forEach(m => {
+                    opts += `<option value="${m.menuId}">${m.name}</option>`;
+                });
+                templateSelectHtml = `
+                    <select style="font-size: 11px; padding: 4px; border-radius: 4px; border: 1px solid #ccc; max-width: 160px; outline: none;" onchange="window.loadOptionsTemplate(this.value); this.value='';">
+                        ${opts}
+                    </select>
+                `;
+            }
 
             Swal.fire({
                 title: isNew ? 'เพิ่มเมนูใหม่' : 'แก้ไขเมนู',
@@ -1110,7 +1124,10 @@
                         <span id="swal-scover-status" style="color:#28a745; font-size:12px; display:block;"></span>
                         
                         <div style="background:#f8f9fa; border:1px solid #ddd; padding:10px; border-radius:8px; margin-top:15px;">
-                            <label style="color:#1e3c72; font-weight:bold; margin-bottom:8px; display:block;">📝 ตัวเลือกเสริม (ตัวเลือกย่อย)</label>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <label style="color:#1e3c72; font-weight:bold; margin:0; display:block;">📝 ตัวเลือกเสริม (ย่อย)</label>
+                                ${templateSelectHtml}
+                            </div>
                             <div id="options-builder-container"></div>
                         </div>
                     </div>`,
@@ -1147,6 +1164,16 @@
                 }
             });
         }
+
+        // ฟังก์ชันดึงข้อมูล Template มาใช้
+        window.loadOptionsTemplate = function(menuId) {
+            if(!menuId) return;
+            const sourceMenu = state.menus.find(m => m.menuId === menuId);
+            if(sourceMenu && sourceMenu.options) {
+                window.currentEditingOptions = JSON.parse(JSON.stringify(sourceMenu.options));
+                renderOptionsBuilder();
+            }
+        };
 
         // ฟังก์ชันสำหรับเรนเดอร์ UI เพิ่ม/ลด ตัวเลือกเสริมแบบ Realtime
         window.renderOptionsBuilder = function() {
