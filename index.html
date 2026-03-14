@@ -951,7 +951,9 @@
                 if (result.isConfirmed) {
                     showLoader('บันทึกข้อมูล...');
                     const res = await api({ action: 'updateShopProfile', shopId: state.shopId, profileData: result.value });
+                    hideLoader();
                     if(res.success) { Swal.fire('สำเร็จ', 'บันทึกข้อมูลแล้ว', 'success').then(()=>window.location.reload()); }
+                    else { Swal.fire('ผิดพลาด', res.error || 'บันทึกไม่สำเร็จ', 'error'); }
                 }
             });
         }
@@ -1039,7 +1041,9 @@
                     if(!res.value.name || !res.value.price) return Swal.fire('Error', 'กรอกชื่อและราคาให้ครบ', 'error');
                     showLoader('กำลังบันทึกเมนู...');
                     const apiRes = await api({ action: 'addOrUpdateMenu', shopId: state.shopId, menuData: res.value });
+                    hideLoader();
                     if(apiRes.success) { Swal.fire('สำเร็จ', 'บันทึกเมนูแล้ว', 'success').then(()=>window.location.reload()); }
+                    else { Swal.fire('ผิดพลาด', apiRes.error || 'บันทึกไม่สำเร็จ', 'error'); }
                 }
             });
         }
