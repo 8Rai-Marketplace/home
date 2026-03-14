@@ -18,6 +18,7 @@
     <style>
         * { font-family: 'Prompt', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
         body { background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%); min-height: 100vh; display: flex; flex-direction: column; color: #333; }
+        /* ⭐️ บีบลดขนาดแถบ Header ด้านบนให้เล็กลง */
         .header { background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 8px 10px; text-align: center; font-size: 1.1em; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
         .container { max-width: 800px; margin: 0 auto; padding: 15px; flex: 1; width: 100%; padding-bottom: 80px;}
         .step { display: none; animation: fadeIn 0.4s ease; background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
@@ -980,6 +981,7 @@
             return payload + ("0000" + crc.toString(16)).slice(-4).toUpperCase();
         }
 
+        // ⭐️ จุดที่มีบั๊ก (แก้ไขแล้ว)
         function calculateSummary() {
             const n = document.getElementById('custName').value.trim(); const p = document.getElementById('custPhone').value.trim(); const a = document.getElementById('custAddress').value.trim();
             const isDel = document.getElementById('delTypeDel').checked;
@@ -989,8 +991,8 @@
 
             let dist = 0; let fee = 0; let food = state.cart.reduce((s,i)=>s+(i.price*i.quantity),0);
             if(isDel) {
+                // ⭐️ แก้ไขเป็น state.marker
                 dist = calculateDistance(state.marker.getLatLng().lat, state.marker.getLatLng().lng);
-                // ⭐️ แก้ไขให้ระยะทางสูงสุดเป็น 8.0 กม.
                 if(dist > 8.0) return Swal.fire('ไกลเกินไป', 'ขออภัยค่ะ ระยะจัดส่งเกิน 8.0 กม.', 'error');
                 fee = calculateDeliveryFee(dist, food);
             }
@@ -1020,7 +1022,8 @@
                 let distanceDisplay = dist.toFixed(2) + ' กม.';
                 if(modalDistanceText) modalDistanceText.textContent = distanceDisplay;
                 
-                const lat = marker.getLatLng().lat; const lng = marker.getLatLng().lng; const dLat = lat - state.shopLocation[0]; const dLng = lng - state.shopLocation[1]; const angle = Math.atan2(dLat, dLng); 
+                // ⭐️ แก้ไขเป็น state.marker
+                const lat = state.marker.getLatLng().lat; const lng = state.marker.getLatLng().lng; const dLat = lat - state.shopLocation[0]; const dLng = lng - state.shopLocation[1]; const angle = Math.atan2(dLat, dLng); 
                 const distanceInMeters = dist * 1000; const displayDistance = Math.min(distanceInMeters, 8000); 
                 
                 // ⭐️ คำนวณเปอร์เซ็นต์เรดาร์ใหม่ รองรับสูงสุด 8 กม. (รัศมีสูงสุด 50%)
