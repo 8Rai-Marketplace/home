@@ -88,8 +88,6 @@
         .shop-banner { background: #eef2f7; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #dce4ec;}
         
         .swal2-html-container { font-family: 'Prompt', sans-serif !important; text-align: left !important; }
-        .option-checkbox-label { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee; transition: 0.2s; }
-        .option-checkbox-label:hover { background: #eef2f7; border-color: #2a5298; }
         
         .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: none; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; }
         .qty-btn.minus { background: #6c757d; }
@@ -291,45 +289,59 @@
         <!-- 🏬 SHOP ADMIN DASHBOARD (ระบบจัดการร้านค้า) -->
         <!-- ========================================== -->
         <div class="step" id="step-shop-admin">
-            <h2>🏬 ระบบจัดการร้านค้า</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0; border: none; padding: 0;">🏬 ระบบร้านค้า</h2>
+            </div>
             
-            <div style="background: #eef2f7; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px dashed #2a5298;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <strong style="font-size: 1.1em; color: #1e3c72;">ตั้งค่าข้อมูลร้าน</strong>
-                    <button class="btn btn-primary btn-sm" onclick="editShopProfile()">✏️ แก้ไข</button>
+            <!-- ⭐️ เพิ่มระบบ Tabs สลับหน้าจอ ออร์เดอร์ กับ จัดการร้าน -->
+            <div style="display: flex; gap: 8px; margin-bottom: 15px; background: #eef2f7; padding: 4px; border-radius: 25px;">
+                <button id="tab-shop-orders" class="btn btn-primary" style="flex: 1; border-radius: 20px; font-size: 0.9em; padding: 8px 0;" onclick="switchShopAdminTab('orders')">📦 ออร์เดอร์</button>
+                <button id="tab-shop-manage" class="btn btn-outline" style="flex: 1; border-radius: 20px; font-size: 0.9em; padding: 8px 0; border: none;" onclick="switchShopAdminTab('manage')">⚙️ จัดการร้าน/เมนู</button>
+            </div>
+
+            <!-- ส่วนของ "ออร์เดอร์" -->
+            <div id="shop-orders-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px;">
+                    <h3 style="font-size: 1em; color: #1e3c72; margin: 0;">รายการออร์เดอร์วันนี้</h3>
+                    <span class="badge badge-green" style="animation: pulseText 2s infinite; font-size: 0.7em;">Auto Refresh 🟢</span>
                 </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <img id="admin-shop-img" src="https://via.placeholder.com/150" style="width:60px; height:60px; border-radius:8px; object-fit:contain; background:#fff; border:1px solid #eee; padding:2px;">
-                    <div>
-                        <h4 id="admin-shop-name" style="margin:0; font-size:1.1em;">ชื่อร้าน...</h4>
-                        <p id="admin-shop-cat" style="margin:0; font-size:0.85em; color:#666;">หมวดหมู่...</p>
-                        <p id="admin-shop-pp" style="margin:0; font-size:0.85em; color:#28a745; font-weight:bold;">PromptPay: ...</p>
+                <div id="admin-orders-list"></div>
+            </div>
+
+            <!-- ส่วนของ "จัดการร้านค้า" -->
+            <div id="shop-manage-section" style="display: none;">
+                <div style="background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <strong style="font-size: 1.1em; color: #1e3c72;">ตั้งค่าข้อมูลร้าน</strong>
+                        <button class="btn btn-primary btn-sm" onclick="editShopProfile()">✏️ แก้ไข</button>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <img id="admin-shop-img" src="https://via.placeholder.com/150" style="width:60px; height:60px; border-radius:8px; object-fit:contain; background:#fff; border:1px solid #eee; padding:2px;">
+                        <div>
+                            <h4 id="admin-shop-name" style="margin:0; font-size:1.1em;">ชื่อร้าน...</h4>
+                            <p id="admin-shop-cat" style="margin:0; font-size:0.85em; color:#666;">หมวดหมู่...</p>
+                            <p id="admin-shop-pp" style="margin:0; font-size:0.85em; color:#28a745; font-weight:bold;">PromptPay: ...</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color:#d32f2f;">สถานะเปิด/ปิดร้าน :</strong>
+                        <label class="switch"><input type="checkbox" id="admin-shop-open" onchange="toggleShopOpen()"><span class="slider"></span></label>
                     </div>
                 </div>
-                <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="color:#d32f2f;">สถานะเปิด/ปิดร้าน :</strong>
-                    <label class="switch"><input type="checkbox" id="admin-shop-open" onchange="toggleShopOpen()"><span class="slider"></span></label>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <div class="stat-box"><div class="stat-val" id="admin-stat-sales">0</div><div class="stat-label">ยอดขายวันนี้ (฿)</div></div>
+                    <div class="stat-box"><div class="stat-val" id="admin-stat-count">0</div><div class="stat-label">ออร์เดอร์</div></div>
                 </div>
-            </div>
 
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <div class="stat-box"><div class="stat-val" id="admin-stat-sales">0</div><div class="stat-label">ยอดขายวันนี้ (฿)</div></div>
-                <div class="stat-box"><div class="stat-val" id="admin-stat-count">0</div><div class="stat-label">ออร์เดอร์</div></div>
-            </div>
-
-            <div style="margin-bottom: 20px; background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px;">
-                <h3 style="font-size: 1.1em; color: #1e3c72; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                    📋 จัดการเมนูอาหาร
-                    <button class="btn btn-success btn-sm" onclick="openMenuModal(null)">➕ เพิ่มเมนูใหม่</button>
-                </h3>
-                <div id="admin-menu-list" style="max-height: 400px; overflow-y: auto; padding-right: 5px;"></div>
-            </div>
-
-            <div>
-                <h3 style="font-size: 1.1em; color: #d32f2f; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                    📦 ออร์เดอร์ร้านคุณ <span class="badge badge-green" style="animation: pulseText 2s infinite;">Auto Refresh</span>
-                </h3>
-                <div id="admin-orders-list"></div>
+                <!-- ⭐️ ปรับขนาดปุ่ม เพิ่มเมนู ให้มินิมอลและไม่เบียดกันตกบรรทัด -->
+                <div style="margin-bottom: 20px; background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 12px;">
+                    <h3 style="font-size: 1em; color: #1e3c72; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 5px;">
+                        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">📋 เมนูอาหาร</span>
+                        <button class="btn btn-success btn-sm" style="font-size: 0.8em; padding: 6px 12px; white-space: nowrap; flex-shrink: 0;" onclick="openMenuModal(null)">➕ เพิ่มเมนูใหม่</button>
+                    </h3>
+                    <div id="admin-menu-list" style="max-height: 400px; overflow-y: auto; padding-right: 5px;"></div>
+                </div>
             </div>
         </div>
 
@@ -382,25 +394,47 @@
             tempImageBase64: null 
         };
 
-        // ⭐️ ฟังก์ชันแปลงลิงก์ให้แสดงรูปได้ (ท่าไม้ตายทะลวงบล็อก)
+        // ⭐️ ฟังก์ชันสลับ Tab ในหน้า Shop Admin
+        function switchShopAdminTab(tab) {
+            const btnOrders = document.getElementById('tab-shop-orders');
+            const btnManage = document.getElementById('tab-shop-manage');
+            const secOrders = document.getElementById('shop-orders-section');
+            const secManage = document.getElementById('shop-manage-section');
+
+            if (tab === 'orders') {
+                btnOrders.className = 'btn btn-primary';
+                btnOrders.style.border = 'none';
+                btnOrders.style.color = 'white';
+                
+                btnManage.className = 'btn btn-outline';
+                btnManage.style.border = 'none';
+                btnManage.style.color = '#555';
+                
+                secOrders.style.display = 'block';
+                secManage.style.display = 'none';
+                loadShopAdminData(true); 
+            } else {
+                btnManage.className = 'btn btn-primary';
+                btnManage.style.border = 'none';
+                btnManage.style.color = 'white';
+                
+                btnOrders.className = 'btn btn-outline';
+                btnOrders.style.border = 'none';
+                btnOrders.style.color = '#555';
+                
+                secManage.style.display = 'block';
+                secOrders.style.display = 'none';
+            }
+        }
+
         function getDirectImageUrl(url) {
             if (!url) return 'https://via.placeholder.com/150';
-            
-            // 1. ถ้าใน Sheet พี่ณะใส่เป็นลิงก์ lh3 หรือเว็บฝากรูปอื่นมาตรงๆ ให้ใช้งานได้ทันทีเลยค่ะ
-            if (!url.includes('drive.google.com')) {
-                return url;
-            }
-            
-            // 2. ถ้าอัปโหลดผ่านระบบแล้วได้ลิงก์ Drive มา ให้แปลงเป็น Thumbnail API 
-            // (เบื้องหลังมันจะดึงข้อมูลผ่านเซิร์ฟเวอร์ lh3/lh4 ของ Google อัตโนมัติค่ะ)
+            if (!url.includes('drive.google.com')) return url;
             const match = url.match(/[-\w]{25,}/);
-            if (match && match[0]) {
-                return `https://drive.google.com/thumbnail?id=${match[0]}&sz=w800`;
-            }
+            if (match && match[0]) { return `https://drive.google.com/thumbnail?id=${match[0]}&sz=w800`; }
             return url;
         }
 
-        // ⭐️ ฟังก์ชันย่อขนาดรูปภาพ (ใช้ร่วมกันได้ทุกส่วน)
         function resizeImage(file, callback, maxWidth) {
             const reader = new FileReader();
             reader.onload = e => {
@@ -459,7 +493,11 @@
             if(state.riderInterval) { clearInterval(state.riderInterval); state.riderInterval = null; }
 
             if(stepId === 'delivery') setTimeout(initMap, 200);
-            if(stepId === 'shop-admin') { loadShopAdminData(); state.adminInterval = setInterval(loadShopAdminDataSilent, 10000); }
+            
+            if(stepId === 'shop-admin') { 
+                switchShopAdminTab('orders'); // เมื่อเข้าหน้าแอดมินร้าน ให้เริ่มที่หน้าออร์เดอร์เสมอ
+                state.adminInterval = setInterval(loadShopAdminDataSilent, 10000); 
+            }
             if(stepId === 'rider') { loadRiderJobs(); state.riderInterval = setInterval(loadRiderJobsSilent, 10000); }
         }
 
@@ -706,6 +744,7 @@
             showStep('menu');
         }
 
+        // ⭐️ ระบบเลือกตัวเลือกเสริม (Options) 
         function promptOptions(menu, shopId) {
             if (state.cartShopId && state.cartShopId !== shopId) {
                 return Swal.fire({ title: 'ขออภัยค่ะ', text: 'ระบบรองรับการสั่งทีละ 1 ร้านค้านะคะ กรุณาล้างตะกร้าก่อนค่ะ', icon: 'warning', showCancelButton: true, confirmButtonText: 'ล้างตะกร้าใหม่' }).then((r) => {
@@ -716,13 +755,19 @@
             
             if(!menu.options || menu.options.length === 0) { return proceedAdd(menu, []); }
 
-            let htmlForm = '<div style="text-align:left; font-size:14px; margin-top:10px; max-height:300px; overflow-y:auto;">';
+            // ⭐️ กล่อง ท็อปปิ้ง ในฝั่งลูกค้า (ปรับแบบมินิมอล ชิดซ้าย)
+            let htmlForm = '<div style="text-align:left; font-size:14px; margin-top:10px; max-height:300px; overflow-y:auto; padding: 0 5px;">';
             menu.options.forEach((opt, idx) => {
-                htmlForm += `<b style="color:#1e3c72;">${opt.name}</b><br>`;
+                htmlForm += `<div style="color:#1e3c72; font-weight:bold; margin-bottom: 6px; font-size: 0.95em; border-bottom: 1px solid #eee; padding-bottom: 4px;">${opt.name}</div>`;
+                htmlForm += `<div style="display:flex; flex-direction:column; gap:5px; margin-bottom: 12px;">`;
                 opt.choices.forEach(choice => {
-                    htmlForm += `<label class="option-checkbox-label"><input type="checkbox" class="swal-opt-cb" value="${choice.name}" data-price="${choice.price}"> ${choice.name} ${choice.price > 0 ? '(+'+choice.price+'฿)' : ''}</label>`;
+                    htmlForm += `<label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; background: #fdfdfd; border-radius: 8px; border: 1px solid #eaeaea; font-size: 13px; margin: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                                    <input type="checkbox" class="swal-opt-cb" value="${choice.name}" data-price="${choice.price}" style="margin:0; width: 18px; height: 18px; accent-color: #ff4444; flex-shrink:0;"> 
+                                    <span style="flex:1; color:#444; line-height: 1.2;">${choice.name}</span> 
+                                    <span style="color:#888; font-weight: bold;">${choice.price > 0 ? '+'+choice.price+'฿' : ''}</span>
+                                 </label>`;
                 });
-                htmlForm += '<br>';
+                htmlForm += `</div>`;
             });
             htmlForm += '</div>';
 
@@ -940,6 +985,7 @@
 
             if(!silent) renderAdminMenuList();
 
+            // ⭐️ ปรับดีไซน์ออร์เดอร์ร้านค้าให้ดูสะอาดตาแบบร้านชานม
             const oList = document.getElementById('admin-orders-list'); oList.innerHTML = '';
             if(res && res.orders && res.orders.length > 0) {
                 res.orders.forEach(o => {
@@ -966,14 +1012,26 @@
                         </div>`;
                     }
                     
-                    let slipBtn = o.slipUrl ? `<a href="${getDirectImageUrl(o.slipUrl)}" target="_blank" style="font-size:0.8em; color:#1e3c72; float:right;">ดูสลิป</a>` : '';
-                    let notesHtml = o.notes ? `<p style="margin:4px 0; font-size:0.8em; color:#e65100; background:#fffde7; padding:4px;">โน้ต: ${o.notes}</p>` : '';
-                    oList.innerHTML += `<div class="order-item" style="border-left: 4px solid #ff9800; background:#fff; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #eee;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><b>#${o.orderNumber.slice(-6)}</b><span class="badge badge-green">${o.status}</span></div>
-                        <p style="margin:2px 0; font-size:0.9em;"><b>ลูกค้า:</b> ${o.customerName} (<a href="tel:${o.phone}">${o.phone}</a>)</p>
-                        <div style="background:#f8f9fa; padding:8px; margin:5px 0; font-size:0.9em; border-radius:8px; white-space:pre-wrap;">${o.itemsStr}</div>
-                        <p style="margin:2px 0; font-size:0.9em;"><b>ยอดอาหาร:</b> <span style="color:#d32f2f; font-weight:bold;">${o.totalFood} ฿</span> ${slipBtn}</p>
-                        ${notesHtml}${actionHtml}
+                    let slipBtn = o.slipUrl ? `<a href="${getDirectImageUrl(o.slipUrl)}" target="_blank" style="font-size:0.8em; color:#1e3c72; background: #eef2f7; padding: 4px 8px; border-radius: 6px; text-decoration: none;">ดูสลิป 🧾</a>` : '';
+                    let notesHtml = o.notes ? `<div style="margin:8px 0; font-size:0.85em; color:#e65100; background:#fffde7; padding:8px; border-radius: 6px; border: 1px dashed #ffca28;">📌 โน้ต: ${o.notes}</div>` : '';
+                    let statusBg = o.status === 'รอรับออร์เดอร์' ? '#ff9900' : (o.status === 'จัดส่งสำเร็จ' ? '#28a745' : (o.status==='ยกเลิก'?'#dc3545':'#007bff'));
+                    
+                    oList.innerHTML += `<div class="order-item" style="border-left: none; border-top: 4px solid ${statusBg}; background:#fff; padding:15px; border-radius:10px; margin-bottom:15px; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items:center;">
+                            <b style="font-size: 1.1em; color: #333;">#${o.orderNumber.slice(-6)}</b>
+                            <span class="badge badge-green" style="background: ${statusBg}; font-size: 11px;">${o.status}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.9em; margin-bottom:4px;">
+                            <span style="color:#555;">ลูกค้า: <b style="color:#222;">${o.customerName}</b></span>
+                            <a href="tel:${o.phone}" style="color:#007bff; text-decoration:none; font-weight: bold;">📞 ${o.phone}</a>
+                        </div>
+                        <div style="background:#f8f9fa; padding:10px; margin:8px 0; font-size:0.9em; border-radius:8px; border: 1px dashed #ddd; line-height: 1.5; color: #444;">${o.itemsStr}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                            <span style="font-size:0.9em; color:#666;">ยอดอาหาร: <b style="color:#d32f2f; font-size: 1.15em;">${o.totalFood} ฿</b></span>
+                            ${slipBtn}
+                        </div>
+                        ${notesHtml}
+                        ${actionHtml}
                     </div>`;
                 });
             } else { oList.innerHTML = '<p style="text-align:center; color:#888;">ไม่มีออร์เดอร์</p>'; }
@@ -985,7 +1043,7 @@
             showLoader(); await api({ action: 'updateShopStatus', shopId: state.shopId, isOpen: isOpen, promptPay: null }); hideLoader();
         }
 
-        // ⭐️ เปลี่ยนระบบแก้ไขร้านค้าของ Shop Admin ให้เป็น Dropdown 21 หมวดหมู่ เหมือนฝั่ง Super Admin
+        // ⭐️ ระบบแก้ไขร้านค้าของ Shop Admin ให้เป็น Dropdown 21 หมวดหมู่
         function editShopProfile() {
             const myShop = state.shops.find(s => s.shopId === state.shopId);
             state.tempImageBase64 = null;
