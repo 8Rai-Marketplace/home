@@ -366,14 +366,13 @@
             tempImageBase64: null 
         };
 
-        // ⭐️ ฟังก์ชันแปลงลิงก์ Google Drive ให้แสดงรูปได้
+        // ⭐️ ฟังก์ชันแปลงลิงก์ Google Drive ให้แสดงรูปได้ (ท่าไม้ตาย lh3)
         function getDirectImageUrl(url) {
             if (!url) return 'https://via.placeholder.com/150';
-            if (url.includes('drive.google.com')) {
-                const match = url.match(/[-\w]{25,}/);
-                if (match && match[0]) {
-                    return `https://drive.google.com/uc?export=view&id=${match[0]}`;
-                }
+            const match = url.match(/[-\w]{25,}/);
+            if (match && match[0]) {
+                // ใช้ CDN Server ของ Google เอง โหลดไวและไม่โดนบล็อกค่ะ
+                return `https://lh3.googleusercontent.com/d/${match[0]}`;
             }
             return url;
         }
