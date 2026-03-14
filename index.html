@@ -33,7 +33,6 @@
         
         .card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .card:hover { transform: translateY(-3px); border-color: #2a5298; box-shadow: 0 5px 15px rgba(42,82,152,0.15); }
-        /* ⭐️ เปลี่ยนให้รูปแสดงผลพอดีกรอบ ไม่โดนตัด (contain) พร้อมกรอบสีขาว */
         .card img { width: 100%; height: 120px; object-fit: contain; border-radius: 8px; margin-bottom: 10px; background: #ffffff; border: 1px solid #f0f0f0; padding: 4px; box-sizing: border-box; }
         .card h3 { font-size: 1em; color: #222; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card p { font-size: 0.8em; color: #777; }
@@ -42,7 +41,6 @@
         .category-icon { font-size: 1.8em; display: block; margin-bottom: 5px; }
 
         .list-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eee; align-items: center; }
-        /* ⭐️ เปลี่ยนรูปเมนูให้พอดีกรอบ ไม่โดนตัด */
         .list-item img { width: 75px; height: 75px; object-fit: contain; border-radius: 10px; background: #ffffff; border: 1px solid #f0f0f0; padding: 4px; box-sizing: border-box; flex-shrink: 0; }
         .list-info { flex: 1; }
         .list-info h4 { margin: 0 0 4px 0; font-size: 1em; color: #333; }
@@ -1019,21 +1017,25 @@
             document.getElementById('admin-menu-list').innerHTML = mHtml;
         }
 
+        // ⭐️ ระบบสร้างและแก้ไขตัวเลือกเสริมแบบ Dynamic UI 
+        window.currentEditingOptions = [];
+        
         function openMenuModal(menuObj) {
             let isNew = !menuObj;
             let mId = isNew ? '' : menuObj.menuId;
             let mName = isNew ? '' : menuObj.name;
             let mPrice = isNew ? '' : menuObj.price;
             let mCat = isNew ? state.shops.find(s=>s.shopId===state.shopId).category : menuObj.category;
-            let optsStr = isNew || !menuObj.options ? '' : menuObj.options.map(o => o.name + ":" + o.choices.map(c => c.name + (c.price>0?'+'+c.price:'')).join(',')).join('\n');
             let mImg = isNew ? '' : (menuObj.imageUrl || '');
             
+            // นำข้อมูล Option เดิมมาใส่ตัวแปร Global
+            window.currentEditingOptions = isNew || !menuObj.options ? [] : JSON.parse(JSON.stringify(menuObj.options));
             state.tempImageBase64 = null;
 
             Swal.fire({
                 title: isNew ? 'เพิ่มเมนูใหม่' : 'แก้ไขเมนู',
                 html: `
-                    <div style="text-align:left; font-size:14px; max-height: 400px; overflow-y:auto; padding-right:10px;">
+                    <div style="text-align:left; font-size:14px; max-height: 450px; overflow-y:auto; padding-right:10px; overflow-x:hidden;">
                         <label>ชื่อเมนู:</label> <input id="m-name" type="text" value="${mName}" placeholder="เช่น ข้าวผัดกะเพรา">
                         <label>ราคา (บาท):</label> <input id="m-price" type="number" value="${mPrice}">
                         <label>หมวดหมู่:</label> <input id="m-cat" type="text" value="${mCat}">
@@ -1044,34 +1046,31 @@
                         </div>
                         <span id="swal-scover-status" style="color:#28a745; font-size:12px; display:block;"></span>
                         
-                        <div style="background:#fff8e1; border:1px dashed #ffc107; padding:10px; border-radius:8px; margin-top:15px;">
-                            <label style="color:#d32f2f; font-weight:bold;">ตัวเลือกเสริม (พิมพ์ตามรูปแบบ)</label><br>
-                            <span style="font-size:11px; color:#666;">รูปแบบ: <b>ชื่อกลุ่ม:ตัวเลือก1,ตัวเลือก2+ราคา</b><br>เช่น <br>ความเผ็ด:เผ็ดน้อย,เผ็ดกลาง,เผ็ดมาก<br>ท็อปปิ้ง:ไข่ดาว+10,ไข่เจียว+10</span>
-                            <textarea id="m-opts" rows="4" style="font-size:12px;">${optsStr}</textarea>
+                        <div style="background:#f8f9fa; border:1px solid #ddd; padding:10px; border-radius:8px; margin-top:15px;">
+                            <label style="color:#1e3c72; font-weight:bold; margin-bottom:8px; display:block;">📝 ตัวเลือกเสริม (ตัวเลือกย่อย)</label>
+                            <div id="options-builder-container"></div>
                         </div>
                     </div>`,
                 showCancelButton: true, confirmButtonText: 'บันทึก',
+                didOpen: () => {
+                    renderOptionsBuilder();
+                },
                 preConfirm: () => {
-                    let optRaw = document.getElementById('m-opts').value.trim();
-                    let optionsParsed = [];
-                    if(optRaw) {
-                        optRaw.split('\n').forEach(line => {
-                            if(line.includes(':')) {
-                                let parts = line.split(':');
-                                let groupName = parts[0].trim();
-                                let choicesRaw = parts[1].split(',');
-                                let choices = choicesRaw.map(c => {
-                                    let cParts = c.split('+');
-                                    return { name: cParts[0].trim(), price: cParts.length>1 ? parseFloat(cParts[1]) : 0 };
-                                });
-                                optionsParsed.push({ name: groupName, choices: choices });
-                            }
-                        });
-                    }
+                    // กรองเฉพาะ Group และ Choice ที่กรอกชื่อแล้วเท่านั้น
+                    let finalOptions = window.currentEditingOptions.filter(g => g.name.trim() !== '').map(g => {
+                        return {
+                            name: g.name.trim(),
+                            choices: g.choices.filter(c => c.name.trim() !== '').map(c => ({
+                                name: c.name.trim(),
+                                price: parseFloat(c.price) || 0
+                            }))
+                        };
+                    }).filter(g => g.choices.length > 0);
+
                     return {
                         menuId: mId, name: document.getElementById('m-name').value, price: parseFloat(document.getElementById('m-price').value),
                         category: document.getElementById('m-cat').value, imageBase64: state.tempImageBase64, 
-                        imageUrl: document.getElementById('swal-simg-url').value, options: optionsParsed
+                        imageUrl: document.getElementById('swal-simg-url').value, options: finalOptions
                     };
                 }
             }).then(async (res) => {
@@ -1085,6 +1084,45 @@
                 }
             });
         }
+
+        // ฟังก์ชันสำหรับเรนเดอร์ UI เพิ่ม/ลด ตัวเลือกเสริมแบบ Realtime
+        window.renderOptionsBuilder = function() {
+            const container = document.getElementById('options-builder-container');
+            if (!container) return;
+            let html = '';
+            if(window.currentEditingOptions.length === 0) {
+                html += `<p style="font-size:12px; color:#888; text-align:center; margin-bottom:10px;">ยังไม่มีตัวเลือกเสริม</p>`;
+            }
+            window.currentEditingOptions.forEach((g, gIdx) => {
+                html += `<div style="background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                    <div style="display:flex; gap:5px; margin-bottom:8px;">
+                        <input type="text" placeholder="ชื่อกลุ่ม (เช่น ท็อปปิ้ง, ไข่ดาว)" value="${g.name}" oninput="updateOptGroup(${gIdx}, this.value)" style="flex:1; margin:0; padding:8px; font-size:13px; font-weight:bold; border:1px solid #1e3c72; background:#eef2f7;">
+                        <button class="btn btn-sm btn-danger" style="padding:0 12px; font-size:16px;" onclick="removeOptGroup(${gIdx})">✖</button>
+                    </div>`;
+                g.choices.forEach((c, cIdx) => {
+                    html += `<div style="display:flex; gap:5px; margin-bottom:5px; padding-left:10px; align-items:center;">
+                        <span style="color:#ccc;">▪</span>
+                        <input type="text" placeholder="ชื่อตัวเลือก (เช่น ไข่ดาว)" value="${c.name}" oninput="updateOptChoiceName(${gIdx}, ${cIdx}, this.value)" style="flex:2; margin:0; padding:6px; font-size:12px; border:1px solid #ddd;">
+                        <span style="font-size:12px; color:#888;">+</span>
+                        <input type="number" placeholder="ราคา" value="${c.price}" oninput="updateOptChoicePrice(${gIdx}, ${cIdx}, this.value)" style="flex:1; margin:0; padding:6px; font-size:12px; border:1px solid #ddd; max-width: 70px;">
+                        <span style="font-size:12px; color:#888;">฿</span>
+                        <button class="btn btn-sm btn-outline" style="padding:4px 8px; border:none; color:#dc3545; background:transparent;" onclick="removeOptChoice(${gIdx}, ${cIdx})">✖</button>
+                    </div>`;
+                });
+                html += `<button class="btn btn-sm" style="background:#eef2f7; color:#007bff; width:100%; margin-top:8px; font-size:12px; border:1px dashed #007bff;" onclick="addOptChoice(${gIdx})">+ เพิ่มตัวเลือกย่อย</button>
+                </div>`;
+            });
+            html += `<button class="btn btn-sm btn-success" style="width:100%; padding:10px; font-size:13px; box-shadow: 0 2px 5px rgba(40,167,69,0.2);" onclick="addOptGroup()">➕ เพิ่มกลุ่มตัวเลือกใหม่</button>`;
+            container.innerHTML = html;
+        };
+
+        window.updateOptGroup = function(gIdx, val) { window.currentEditingOptions[gIdx].name = val; };
+        window.updateOptChoiceName = function(gIdx, cIdx, val) { window.currentEditingOptions[gIdx].choices[cIdx].name = val; };
+        window.updateOptChoicePrice = function(gIdx, cIdx, val) { window.currentEditingOptions[gIdx].choices[cIdx].price = val; };
+        window.addOptGroup = function() { window.currentEditingOptions.push({name: '', choices: [{name: '', price: 0}]}); renderOptionsBuilder(); };
+        window.addOptChoice = function(gIdx) { window.currentEditingOptions[gIdx].choices.push({name: '', price: 0}); renderOptionsBuilder(); };
+        window.removeOptGroup = function(gIdx) { window.currentEditingOptions.splice(gIdx, 1); renderOptionsBuilder(); };
+        window.removeOptChoice = function(gIdx, cIdx) { window.currentEditingOptions[gIdx].choices.splice(cIdx, 1); renderOptionsBuilder(); };
 
         async function toggleMenu(menuId, isAvail) { showLoader(); await api({ action: 'updateMenuStatus', menuId: menuId, isAvailable: isAvail }); hideLoader(); }
         async function changeStatus(orderNum, stat) { showLoader(); await api({ action: 'updateOrderStatus', orderNumber: orderNum, newStatus: stat }); loadShopAdminData(); }
