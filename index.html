@@ -987,7 +987,7 @@
                         <label>รูปปก (เลือกอัปโหลด หรือ วางลิงก์รูป):</label><br>
                         <div style="display:flex; gap:5px; margin-bottom:5px;">
                             <button class="btn btn-outline btn-sm" style="flex:1;" onclick="document.getElementById('shop-cover-upload').click()">📂 เลือกรูปจากเครื่อง</button>
-                            <input id="swal-simg-url" type="text" placeholder="หรือวางลิงก์รูปที่นี่" value="${myShop.imageUrl || ''}" style="flex:2; margin:0; padding:8px; font-size:12px;">
+                            <input id="swal-simg-url" type="text" placeholder="หรือวางลิงก์รูปที่นี่" value="${myShop.imageUrl ? getDirectImageUrl(myShop.imageUrl) : ''}" style="flex:2; margin:0; padding:8px; font-size:12px;">
                         </div>
                         <span id="swal-scover-status" style="color:#28a745; font-size:12px; display:block;"></span>
                     </div>`,
@@ -998,7 +998,7 @@
                         category: document.getElementById('swal-scat').value, 
                         promptPay: document.getElementById('swal-spp').value, 
                         imageBase64: state.tempImageBase64,
-                        imageUrl: document.getElementById('swal-simg-url').value 
+                        imageUrl: document.getElementById('swal-simg-url') ? document.getElementById('swal-simg-url').value : ''
                     }; 
                 }
             }).then(async (result) => {
@@ -1051,7 +1051,7 @@
             let mName = isNew ? '' : menuObj.name;
             let mPrice = isNew ? '' : menuObj.price;
             let mCat = isNew ? state.shops.find(s=>s.shopId===state.shopId).category : menuObj.category;
-            let mImg = isNew ? '' : (menuObj.imageUrl || '');
+            let mImg = isNew ? '' : (menuObj.imageUrl ? getDirectImageUrl(menuObj.imageUrl) : '');
             
             // นำข้อมูล Option เดิมมาใส่ตัวแปร Global
             window.currentEditingOptions = isNew || !menuObj.options ? [] : JSON.parse(JSON.stringify(menuObj.options));
