@@ -250,11 +250,27 @@
                 <input type="text" id="new-shop-name" placeholder="ชื่อร้านค้า *" required>
                 <select id="new-shop-cat">
                     <option value="">-- เลือกหมวดหมู่ --</option>
-                    <option value="อาหารตามสั่ง">อาหารตามสั่ง</option>
+                    <option value="ตามสั่ง">ตามสั่ง</option>
+                    <option value="จานเดียว">จานเดียว</option>
                     <option value="ก๋วยเตี๋ยว">ก๋วยเตี๋ยว</option>
-                    <option value="ชานม/กาแฟ">ชานม/กาแฟ</option>
-                    <option value="ของทอด/ทานเล่น">ของทอด/ทานเล่น</option>
-                    <option value="ยำ/ส้มตำ">ยำ/ส้มตำ</option>
+                    <option value="ของทอด">ของทอด</option>
+                    <option value="ปิ้ง ย่าง">ปิ้ง ย่าง</option>
+                    <option value="อาหารทะเล">อาหารทะเล</option>
+                    <option value="ประเภทยำ">ประเภทยำ</option>
+                    <option value="ผัด คั่ว">ผัด คั่ว</option>
+                    <option value="ส้มตำ">ส้มตำ</option>
+                    <option value="ข้าวแกง">ข้าวแกง</option>
+                    <option value="ชานมไข่มุก">ชานมไข่มุก</option>
+                    <option value="กาแฟ ชา">กาแฟ ชา</option>
+                    <option value="เบเกอรี่">เบเกอรี่</option>
+                    <option value="ขนมกินเล่น">ขนมกินเล่น</option>
+                    <option value="ผลไม้ตามฤดูกาล">ผลไม้ตามฤดูกาล</option>
+                    <option value="ไอศกรีม">ไอศกรีม</option>
+                    <option value="เพื่อสุขภาพ">เพื่อสุขภาพ</option>
+                    <option value="ฟาสต์ฟู้ด">ฟาสต์ฟู้ด</option>
+                    <option value="อาหารจีน">อาหารจีน</option>
+                    <option value="อาหารเกาหลี">อาหารเกาหลี</option>
+                    <option value="อาหารฮาลาล">อาหารฮาลาล</option>
                     <option value="อื่นๆ">อื่นๆ</option>
                 </select>
                 <input type="text" id="new-shop-uid" placeholder="UID ไลน์ของเจ้าของร้าน *" required>
@@ -952,12 +968,20 @@
         function editShopProfile() {
             const myShop = state.shops.find(s => s.shopId === state.shopId);
             state.tempImageBase64 = null;
+            
+            const catList = ['ตามสั่ง', 'จานเดียว', 'ก๋วยเตี๋ยว', 'ของทอด', 'ปิ้ง ย่าง', 'อาหารทะเล', 'ประเภทยำ', 'ผัด คั่ว', 'ส้มตำ', 'ข้าวแกง', 'ชานมไข่มุก', 'กาแฟ ชา', 'เบเกอรี่', 'ขนมกินเล่น', 'ผลไม้ตามฤดูกาล', 'ไอศกรีม', 'เพื่อสุขภาพ', 'ฟาสต์ฟู้ด', 'อาหารจีน', 'อาหารเกาหลี', 'อาหารฮาลาล', 'อื่นๆ'];
+            let catOptions = catList.map(c => `<option value="${c}" ${myShop.category === c ? 'selected' : ''}>${c}</option>`).join('');
+
             Swal.fire({
                 title: 'แก้ไขข้อมูลร้าน',
                 html: `
                     <div style="text-align:left; font-size:14px;">
                         <label>ชื่อร้าน:</label> <input id="swal-sname" type="text" value="${myShop.shopName}">
-                        <label>หมวดหมู่ (เช่น ชานม, ก๋วยเตี๋ยว):</label> <input id="swal-scat" type="text" value="${myShop.category}">
+                        <label>หมวดหมู่ร้านค้า:</label> 
+                        <select id="swal-scat" style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; background: #fafafa; outline: none;">
+                            <option value="">-- เลือกหมวดหมู่ --</option>
+                            ${catOptions}
+                        </select>
                         <label>เบอร์ PromptPay:</label> <input id="swal-spp" type="text" value="${myShop.promptpay}">
                         <label>รูปปก (เลือกอัปโหลด หรือ วางลิงก์รูป):</label><br>
                         <div style="display:flex; gap:5px; margin-bottom:5px;">
